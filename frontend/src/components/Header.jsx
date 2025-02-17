@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 function Header() {
   return (
     <header className="w-full bg-white shadow-md py-3 px-32 flex justify-between items-center sticky top-0 z-50">
@@ -8,18 +10,18 @@ function Header() {
 
       {/* Navigation Links */}
       <nav className="hidden md:flex space-x-6 font-semibold">
-        <a href="#" className="text-blue-600">
+        <Link className="text-blue-600" to={"/"}>
           Home
-        </a>
-        <a href="#" className="text-black hover:text-gray-600">
+        </Link>
+        <Link className="text-blue-600" to={"/organization"}>
           Organization
-        </a>
-        <a href="#" className="text-black hover:text-gray-600">
+        </Link>
+        <Link className="text-blue-600" to={"/gallery"}>
           Gallery
-        </a>
-        <a href="#" className="text-black hover:text-gray-600">
+        </Link>
+        <Link className="text-blue-600" to={"/news"}>
           News
-        </a>
+        </Link>
       </nav>
 
       {/* Sign In Button */}
