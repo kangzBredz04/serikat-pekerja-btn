@@ -1,16 +1,16 @@
 function Home() {
   return (
-    <div className="">
-      <div className="h-screen w-full bg-gradient-to-b from-blue-400 to-white py-20 px-28">
-        <div className="grid grid-cols-2 gap-4">
-          <div>
+    <div className="flex flex-col">
+      <div className="h-screen w-full bg-gradient-to-b from-blue-400 to-white py-20 px-4 md:px-28">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="order-2 md:order-1">
             <img
-              className="rounded-2xl h-3/4"
+              className="rounded-2xl h-3/4 w-full"
               src="https://i.pinimg.com/736x/3a/67/19/3a67194f5897030237d83289372cf684.jpg"
               alt=""
             />
           </div>
-          <div className="flex flex-col gap-10">
+          <div className="flex flex-col gap-10 order-1 md:order-2">
             <div>
               <h1 className="text-6xl font-extrabold tracking-wide text-gray-800">
                 Bank Tabungan Negara (BTN)
@@ -35,7 +35,7 @@ function Home() {
           </div>
         </div>
       </div>
-      <section className="w-full bg-gradient-to-b from-white via-white to-blue-300 py-16 px-8">
+      <section className="w-full bg-gradient-to-b from-white via-white to-blue-300 py-16 px-4 md:px-8">
         <div className="max-w-5xl mx-auto text-center">
           <h2 className="text-3xl font-extrabold text-blue-900">VISI KAMI</h2>
           <p className="text-gray-600 mt-2 text-lg">
