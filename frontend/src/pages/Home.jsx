@@ -2,30 +2,30 @@ import { FaArrowRight } from "react-icons/fa";
 function Home() {
   const newsItems = [
     {
-      title: "Silver Run SPBRI x BRI Runners Community (HUT ke-25 SPBRI)",
-      category: "HUT KE-25 SPBRI",
+      title: "BTN Run x BTN Runners Community (HUT ke-75 BTN)",
+      category: "HUT KE-75 BTN",
     },
     {
-      title: "Video Content Competition (HUT ke-25 SPBRI)",
-      category: "HUT KE-25 SPBRI",
+      title: "Video Content Competition (HUT ke-75 BTN)",
+      category: "HUT KE-75 BTN",
     },
     {
-      title: "Essay Competition (HUT ke-25 SPBRI)",
-      category: "HUT KE-25 SPBRI",
+      title: "Essay Competition (HUT ke-75 BTN)",
+      category: "HUT KE-75 BTN",
     },
     {
-      title: "HUT ke-25 SPBRI: Kolaboratif, Sehat, dan Produktif",
-      category: "HUT KE-25 SPBRI",
+      title: "HUT ke-75 BTN: Kolaboratif, Sehat, dan Produktif",
+      category: "HUT KE-75 BTN",
     },
   ];
   return (
     <div className="">
-      <div className="min-h-screen w-full bg-gradient-to-b from-white to-blue-400 py-10 px-5 md:py-20 md:px-28">
+      <div className="min-h-screen w-full bg-gradient-to-b from-white to-blue-200 py-10 px-5 md:py-20 md:px-28">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <img
               className="rounded-2xl w-auto h-auto md:h-3/4"
-              src="https://i.pinimg.com/736x/3a/67/19/3a67194f5897030237d83289372cf684.jpg"
+              src="https://community.softr.io/uploads/db9110/original/2X/7/74e6e7e382d0ff5d7773ca9a87e6f6f8817a68a6.jpeg"
               alt=""
             />
           </div>
@@ -55,7 +55,7 @@ function Home() {
           </div>
         </div>
       </div>
-      <section className="w-full bg-gradient-to-b from-white to-blue-400 py-10 md:py-16 px-5 md:px-8">
+      <div className="min-h-screen bg-gradient-to-t from-white to-blue-200 py-10 md:py-16 px-5 md:px-8">
         <div className="max-w-3xl md:max-w-5xl mx-auto text-center">
           <h2 className="text-2xl md:text-3xl font-extrabold text-blue-900">
             VISI KAMI
@@ -70,35 +70,35 @@ function Home() {
           <div className="bg-white shadow-lg rounded-xl p-4 md:p-6">
             <h3 className="text-lg font-bold text-blue-900">Independen</h3>
             <p className="text-gray-700 mt-2 leading-relaxed text-sm md:text-base">
-              SPBRI tidak terafiliasi dengan kepentingan pihak tertentu dan
+              SPBTN tidak terafiliasi dengan kepentingan pihak tertentu dan
               memperjuangkan kepentingan pekerja secara merdeka untuk
-              keberlanjutan kejayaan BRI dan peningkatan kesejahteraan Pekerja.
+              keberlanjutan kejayaan BTN dan peningkatan kesejahteraan Pekerja.
             </p>
           </div>
 
           <div className="bg-white shadow-lg rounded-xl p-4 md:p-6">
             <h3 className="text-lg font-bold text-blue-900">Representatif</h3>
             <p className="text-gray-700 mt-2 leading-relaxed text-sm md:text-base">
-              SPBRI sebagai lembaga formal yang representatif menyalurkan
-              aspirasi seluruh pekerja BRI.
+              SPBTN sebagai lembaga formal yang representatif menyalurkan
+              aspirasi seluruh pekerja BTN.
             </p>
           </div>
 
           <div className="bg-white shadow-lg rounded-xl p-4 md:p-6">
             <h3 className="text-lg font-bold text-blue-900">Dinamis</h3>
             <p className="text-gray-700 mt-2 leading-relaxed text-sm md:text-base">
-              Organisasi SPBRI dapat bergerak secara dinamis dan agile dalam
-              menjalankan roda organisasinya untuk mencapai tujuan SPBRI.
+              Organisasi SPBTN dapat bergerak secara dinamis dan agile dalam
+              menjalankan roda organisasinya untuk mencapai tujuan SPBTN.
             </p>
           </div>
         </div>
-      </section>
-      <div className="bg-gray-100 py-10 px-6">
+      </div>
+      <div className="min-h-full bg-gradient-to-b from-white to-blue-300 py-10 px-6">
         <h2 className="text-3xl font-bold text-blue-900 mb-6">News</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {newsItems.map((item, index) => (
-            <div key={index} className="bg-white p-4 rounded-lg shadow-lg">
-              <div className="h-32 bg-gradient-to-r from-blue-500 to-yellow-500 rounded-t-lg flex items-center justify-center">
+            <div key={index} className="bg-white p-4 rounded-lg shadow-lg h-96">
+              <div className="h-48 bg-gradient-to-r from-blue-500 to-yellow-500 rounded-t-lg flex items-center justify-center">
                 <span className="text-white text-lg font-bold">
                   {item.category}
                 </span>
