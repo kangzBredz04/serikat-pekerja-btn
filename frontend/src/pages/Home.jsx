@@ -1,4 +1,23 @@
+import { FaArrowRight } from "react-icons/fa";
 function Home() {
+  const newsItems = [
+    {
+      title: "Silver Run SPBRI x BRI Runners Community (HUT ke-25 SPBRI)",
+      category: "HUT KE-25 SPBRI",
+    },
+    {
+      title: "Video Content Competition (HUT ke-25 SPBRI)",
+      category: "HUT KE-25 SPBRI",
+    },
+    {
+      title: "Essay Competition (HUT ke-25 SPBRI)",
+      category: "HUT KE-25 SPBRI",
+    },
+    {
+      title: "HUT ke-25 SPBRI: Kolaboratif, Sehat, dan Produktif",
+      category: "HUT KE-25 SPBRI",
+    },
+  ];
   return (
     <div className="">
       <div className="min-h-screen w-full bg-gradient-to-b from-white to-blue-400 py-10 px-5 md:py-20 md:px-28">
@@ -74,7 +93,34 @@ function Home() {
           </div>
         </div>
       </section>
-      <div className="text-center py-4">Tiga</div>
+      <div className="bg-gray-100 py-10 px-6">
+        <h2 className="text-3xl font-bold text-blue-900 mb-6">News</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {newsItems.map((item, index) => (
+            <div key={index} className="bg-white p-4 rounded-lg shadow-lg">
+              <div className="h-32 bg-gradient-to-r from-blue-500 to-yellow-500 rounded-t-lg flex items-center justify-center">
+                <span className="text-white text-lg font-bold">
+                  {item.category}
+                </span>
+              </div>
+              <h3 className="text-lg font-semibold mt-4 text-gray-900">
+                {item.title}
+              </h3>
+              <a
+                href="#"
+                className="flex items-center text-blue-600 mt-4 font-medium"
+              >
+                Read More <FaArrowRight className="ml-2" />
+              </a>
+            </div>
+          ))}
+        </div>
+        <div className="text-center mt-6">
+          <a href="#" className="text-blue-600 font-semibold text-lg">
+            View All
+          </a>
+        </div>
+      </div>
       <div className="text-center py-4">Empat</div>
     </div>
   );
