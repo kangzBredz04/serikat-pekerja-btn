@@ -1,4 +1,5 @@
 import { FaArrowRight } from "react-icons/fa";
+import { Link } from "react-router-dom";
 function Home() {
   const newsItems = [
     {
@@ -93,7 +94,7 @@ function Home() {
           </div>
         </div>
       </div>
-      <div className="min-h-full bg-gradient-to-b from-white to-blue-300 py-10 px-6">
+      <div className="min-h-full bg-gradient-to-b from-white to-blue-200 py-10 px-6">
         <h2 className="text-3xl font-bold text-blue-600 mb-6">News</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {newsItems.map((item, index) => (
@@ -116,12 +117,15 @@ function Home() {
           ))}
         </div>
         <div className="text-center mt-6">
-          <a href="#" className="text-blue-600 font-semibold text-lg">
+          <a className="text-blue-700 font-semibold text-lg" href="/news">
             View All
           </a>
+          {/* <Link className="text-blue-700 font-semibold text-lg" to="/news">
+            View All
+          </Link> */}
         </div>
       </div>
-      <div className="text-center py-4">Empat</div>
+      {/* <div className="text-center py-4">Empat</div> */}
     </div>
   );
 }
