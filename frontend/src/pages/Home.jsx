@@ -1,4 +1,5 @@
 import { FaArrowRight } from "react-icons/fa";
+import { Link } from "react-router-dom";
 // import { Link } from "react-router-dom";
 function Home() {
   const newsItems = [
@@ -20,13 +21,13 @@ function Home() {
     },
   ];
   return (
-    <div className="">
+    <div>
       <div className="min-h-screen w-full bg-gradient-to-b from-white to-blue-200 py-10 px-5 md:py-20 md:px-28">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
+          <div className="h-full w-full  flex-1">
             <img
-              className="rounded-2xl w-auto h-auto md:h-3/4"
-              src="https://community.softr.io/uploads/db9110/original/2X/7/74e6e7e382d0ff5d7773ca9a87e6f6f8817a68a6.jpeg"
+              className="rounded-2xl w-full h-full object-cover"
+              src="https://btn.co.id/-/media/Images/About/News/Des/berita---hut-kpr-bale-launch-(1).png?h=474&w=843&hash=E4A9EC2298D065AAAB3ADB5EFB354924"
               alt=""
             />
           </div>
@@ -48,11 +49,15 @@ function Home() {
                 autem minima commodi.
               </p>
             </div>
-            <div>
+            <Link
+              to={
+                "https://forms.zohopublic.com/dppspbtn/form/FormulirAnggotaSPBTN1/formperma/4KkNx7Qb8ZsR-E61vKSZ2fhM_0vOF4DRcsNRDFTvzOU"
+              }
+            >
               <button className="bg-blue-600 text-white px-4 py-2 md:px-6 md:py-2 rounded-full font-semibold shadow-md hover:bg-blue-800 cursor-pointer">
-                Register Now
+                Daftar Anggota
               </button>
-            </div>
+            </Link>
           </div>
         </div>
       </div>
