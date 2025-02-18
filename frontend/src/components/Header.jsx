@@ -5,7 +5,7 @@ function Header() {
     <header className="w-full bg-white shadow-md py-3 px-32 flex justify-between items-center sticky top-0 z-50">
       {/* Logo */}
       <Link to={"/"} className="flex items-center">
-        <img src="/btn-logo-2.png" alt="Logo" className="h-12" />
+        <img src="/serikat-pekerja-btn-logo.png" alt="Logo" className="h-14" />
       </Link>
 
       {/* Navigation Links */}
