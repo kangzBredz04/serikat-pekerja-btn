@@ -33,20 +33,23 @@ function Home() {
           </div>
           <div className="flex flex-col gap-6 md:gap-10">
             <div>
-              <h1 className="text-4xl md:text-6xl font-extrabold tracking-wide text-gray-800">
+              <h1 className="text-3xl md:text-5xl font-extrabold tracking-wide text-gray-800">
                 Bank Tabungan Negara (BTN)
               </h1>
             </div>
             <div>
-              <p className="leading-7 md:leading-9 text-base md:text-xl">
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ab sit
-                possimus eos sunt, beatae dignissimos provident fugit, omnis
-                laudantium quo temporibus numquam illum, accusantium quae est
-                repellat doloribus modi quis! Aut praesentium et voluptates
-                minus laudantium ipsum nesciunt, vel alias eos ratione eum?
-                Soluta, tenetur similique. Laborum adipisci similique voluptas
-                eaque. Nostrum, deleniti ipsam numquam praesentium architecto
-                autem minima commodi.
+              <p className="leading-7 md:leading-9 text-sm md:text-md">
+                Serikat Pekerja BTN didirikan pada tanggal 17 Juni 1999 Ketua
+                umum Pertama adalah Sdr. Sutarno dan Sekjend Sdr. Alm Satya
+                Wijayantara menggunakan skema pemilihan langsung one man one
+                vote. Ketua Umum selanjutnya adalah Sdr. Alm Satya Wijayantara
+                bersama Sdr. Mohamad Faiz sebagai Sekjend DPP SP-BTN. Pada Tahun
+                2022, DPP SP-BTN mengalami kekosongan kepemimpinan setelah
+                beberapa pengurus wafat. Selanjutnya untuk menyalamatkan
+                organisasi dilakukan Musyawarah Nasional Luar Biasa secara
+                hybrid di Bekasi. Pada forum tersebut terpilih Sdr. Rizky
+                Novriady sebagai Ketua Umum dan Sdr. Ugroseno Bagaskoro sebagai
+                Sekretaris Jendral untuk Periode 2022 - 2026.
               </p>
             </div>
             <Link
