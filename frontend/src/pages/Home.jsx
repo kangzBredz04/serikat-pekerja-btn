@@ -94,11 +94,11 @@ function Home() {
         </div>
       </div>
       <div className="min-h-full bg-gradient-to-b from-white to-blue-300 py-10 px-6">
-        <h2 className="text-3xl font-bold text-blue-900 mb-6">News</h2>
+        <h2 className="text-3xl font-bold text-blue-600 mb-6">News</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {newsItems.map((item, index) => (
             <div key={index} className="bg-white p-4 rounded-lg shadow-lg h-96">
-              <div className="h-48 bg-gradient-to-r from-blue-500 to-yellow-500 rounded-t-lg flex items-center justify-center">
+              <div className="h-48 bg-gradient-to-r from-blue-500 to-red-500 rounded-t-lg flex items-center justify-center">
                 <span className="text-white text-lg font-bold">
                   {item.category}
                 </span>
