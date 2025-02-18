@@ -22,7 +22,7 @@ function Home() {
   ];
   return (
     <div>
-      <div className="min-h-screen w-full bg-gradient-to-b from-white to-blue-200 py-10 px-5 md:py-20 md:px-28">
+      <div className="min-h-screen w-full bg-gradient-to-b from-white to-blue-200 py-10 px-4   md:py-20 md:px-28">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="h-full w-full  flex-1">
             <img
