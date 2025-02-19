@@ -9,9 +9,10 @@ const News = () => {
   const itemsPerPage = 6;
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 2000); // Simulasi loading selama 2 detik
-    return () => clearTimeout(timer);
-  }, []);
+    if (news.length > 0) {
+      setLoading(false);
+    }
+  }, [news]);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
