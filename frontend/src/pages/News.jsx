@@ -1,18 +1,22 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { FaChevronLeft, FaChevronRight, FaArrowRight } from "react-icons/fa";
 import { AllContext } from "../App";
 
 const News = () => {
   const { news } = useContext(AllContext);
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true);
   const itemsPerPage = 6;
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 2000); // Simulasi loading selama 2 detik
+    return () => clearTimeout(timer);
+  }, []);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = news.slice(indexOfFirstItem, indexOfLastItem);
   const totalPages = Math.ceil(news.length / itemsPerPage);
-
-  // console.log(news);
 
   return (
     <div className="max-w-7xl mx-auto py-10 px-4 text-center">
@@ -20,37 +24,51 @@ const News = () => {
         News
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {currentItems.map((item, index) => (
-          <div key={index} className="bg-white p-4 rounded-lg shadow-lg h-96">
-            {item.image_url ? (
-              <img
-                src={item.image_url}
-                alt={item.title}
-                className="h-48 w-full object-cover rounded-t-lg"
-              />
-            ) : (
-              <div className="h-48 bg-gradient-to-r from-blue-500 to-red-500 rounded-t-lg flex items-center justify-center">
-                <span className="text-white text-lg font-bold">
-                  {item.category}
-                </span>
+        {loading
+          ? Array.from({ length: 3 }).map((_, index) => (
+              <div
+                key={index}
+                className="bg-white p-4 rounded-lg shadow-lg h-96 animate-pulse"
+              >
+                <div className="h-48 bg-gray-300 rounded-t-lg"></div>
+                <div className="mt-4 h-6 bg-gray-300 w-3/4 mx-auto rounded"></div>
+                <div className="mt-4 h-4 bg-gray-300 w-1/2 mx-auto rounded"></div>
               </div>
-            )}
-            <h3 className="text-lg font-semibold mt-4 text-gray-900">
-              {item.title}
-            </h3>
-            <a
-              className="flex items-center text-blue-600 mt-4 font-medium cursor-pointer"
-              onClick={() => {
-                localStorage.setItem("id_news", item.id);
-                window.location.href = `/news/${localStorage.getItem(
-                  "id_news"
-                )}`;
-              }}
-            >
-              Read More <FaArrowRight className="ml-2" />
-            </a>
-          </div>
-        ))}
+            ))
+          : currentItems.map((item, index) => (
+              <div
+                key={index}
+                className="bg-white p-4 rounded-lg shadow-lg h-96"
+              >
+                {item.image_url ? (
+                  <img
+                    src={item.image_url}
+                    alt={item.title}
+                    className="h-48 w-full object-cover rounded-t-lg"
+                  />
+                ) : (
+                  <div className="h-48 bg-gradient-to-r from-blue-500 to-red-500 rounded-t-lg flex items-center justify-center">
+                    <span className="text-white text-lg font-bold">
+                      {item.category}
+                    </span>
+                  </div>
+                )}
+                <h3 className="text-lg font-semibold mt-4 text-gray-900">
+                  {item.title}
+                </h3>
+                <a
+                  className="flex items-center text-blue-600 mt-4 font-medium cursor-pointer"
+                  onClick={() => {
+                    localStorage.setItem("id_news", item.id);
+                    window.location.href = `/news/${localStorage.getItem(
+                      "id_news"
+                    )}`;
+                  }}
+                >
+                  Read More <FaArrowRight className="ml-2" />
+                </a>
+              </div>
+            ))}
       </div>
       <div className="flex justify-center mt-6 space-x-4 items-center">
         <button
