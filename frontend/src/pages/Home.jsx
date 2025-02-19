@@ -1,25 +1,22 @@
+import { useContext, useEffect, useState } from "react";
 import { FaArrowRight } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { AllContext } from "../App";
 // import { Link } from "react-router-dom";
 function Home() {
-  const newsItems = [
-    {
-      title: "BTN Run x BTN Runners Community (HUT ke-75 BTN)",
-      category: "HUT KE-75 BTN",
-    },
-    {
-      title: "Video Content Competition (HUT ke-75 BTN)",
-      category: "HUT KE-75 BTN",
-    },
-    {
-      title: "Essay Competition (HUT ke-75 BTN)",
-      category: "HUT KE-75 BTN",
-    },
-    {
-      title: "HUT ke-75 BTN: Kolaboratif, Sehat, dan Produktif",
-      category: "HUT KE-75 BTN",
-    },
-  ];
+  const { news } = useContext(AllContext);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (news.length > 0) {
+      setLoading(false);
+    }
+  }, [news]);
+
+  const sortedNews = news
+    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+    .slice(0, 3);
+
   return (
     <div>
       <div className="min-h-screen w-full bg-gradient-to-b from-white to-blue-200 py-10 px-4   md:py-20 md:px-28">
@@ -34,7 +31,7 @@ function Home() {
           <div className="flex flex-col gap-6 md:gap-10">
             <div>
               <h1 className="text-3xl md:text-5xl font-extrabold tracking-wide text-gray-800">
-                Bank Tabungan Negara (BTN)
+                Serikat Pekerja Bank Tabungan Negara (SP-BTN)
               </h1>
             </div>
             <div>
@@ -104,33 +101,61 @@ function Home() {
       </div>
       <div className="min-h-full bg-gradient-to-b from-white to-blue-200 py-10 px-6">
         <h2 className="text-3xl font-bold text-blue-600 mb-6">News</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {newsItems.map((item, index) => (
-            <div key={index} className="bg-white p-4 rounded-lg shadow-lg h-96">
-              <div className="h-48 bg-gradient-to-r from-blue-500 to-red-500 rounded-t-lg flex items-center justify-center">
-                <span className="text-white text-lg font-bold">
-                  {item.category}
-                </span>
-              </div>
-              <h3 className="text-lg font-semibold mt-4 text-gray-900">
-                {item.title}
-              </h3>
-              <a
-                href="#"
-                className="flex items-center text-blue-600 mt-4 font-medium"
-              >
-                Read More <FaArrowRight className="ml-2" />
-              </a>
-            </div>
-          ))}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {loading
+            ? // Skeleton Loader
+              Array(3)
+                .fill(0)
+                .map((_, index) => (
+                  <div
+                    key={index}
+                    className="bg-gray-300 p-4 rounded-lg shadow-lg h-96 animate-pulse"
+                  >
+                    <div className="h-48 w-full bg-gray-400 rounded-t-lg"></div>
+                    <div className="mt-4 h-6 bg-gray-400 rounded w-3/4"></div>
+                    <div className="mt-2 h-4 bg-gray-400 rounded w-1/2"></div>
+                  </div>
+                ))
+            : // Berita Asli setelah loading selesai
+              sortedNews.map((item, index) => (
+                <div
+                  key={index}
+                  className="bg-white p-4 rounded-lg shadow-lg h-96"
+                >
+                  {item.image ? (
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      className="h-48 w-full object-cover rounded-t-lg"
+                    />
+                  ) : (
+                    <div className="h-48 bg-gradient-to-r from-blue-500 to-red-500 rounded-t-lg flex items-center justify-center">
+                      <span className="text-white text-lg font-bold">
+                        {item.category}
+                      </span>
+                    </div>
+                  )}
+                  <h3 className="text-lg font-semibold mt-4 text-gray-900">
+                    {item.title}
+                  </h3>
+                  <a
+                    onClick={() => {
+                      localStorage.setItem("id_news", item.id);
+                      window.location.href = `/news/${localStorage.getItem(
+                        "id_news"
+                      )}`;
+                    }}
+                    className="flex items-center text-blue-600 mt-4 font-medium cursor-pointer"
+                  >
+                    Read More <FaArrowRight className="ml-2" />
+                  </a>
+                </div>
+              ))}
         </div>
         <div className="text-center mt-6">
           <a className="text-blue-700 font-semibold text-lg" href="/news">
             View All
           </a>
-          {/* <Link className="text-blue-700 font-semibold text-lg" to="/news">
-            View All
-          </Link> */}
         </div>
       </div>
       {/* <div className="text-center py-4">Empat</div> */}
