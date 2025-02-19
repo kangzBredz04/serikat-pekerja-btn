@@ -39,8 +39,8 @@ const News = () => {
               {item.title}
             </h3>
             <a
-              className="flex items-center text-blue-600 mt-4 font-medium"
-              // onClick={() => alert(item.content)}
+              className="flex items-center text-blue-600 mt-4 font-medium cursor-pointer"
+              onClick={() => localStorage.setItem("id_news", item.id)}
             >
               Read More <FaArrowRight className="ml-2" />
             </a>
