@@ -122,16 +122,16 @@ function Home() {
                   key={index}
                   className="bg-white p-4 rounded-lg shadow-lg h-96"
                 >
-                  {item.image ? (
+                  {item.image_url ? (
                     <img
-                      src={item.image}
+                      src={item.image_url}
                       alt={item.title}
                       className="h-48 w-full object-cover rounded-t-lg"
                     />
                   ) : (
                     <div className="h-48 bg-gradient-to-r from-blue-500 to-red-500 rounded-t-lg flex items-center justify-center">
-                      <span className="text-white text-lg font-bold">
-                        {item.category}
+                      <span className="text-white text-md text-center font-bold">
+                        {item.title}
                       </span>
                     </div>
                   )}
