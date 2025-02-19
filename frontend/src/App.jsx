@@ -9,19 +9,30 @@ export const AllContext = createContext();
 
 function App() {
   const [news, setNews] = useState([]);
+  const [newsDetail, setNewsDetail] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     api.get("/new/get-all").then((response) => setNews(response));
+    api
+      .get(`/new/get-by-id/${localStorage.getItem("id_news")}`)
+      .then((response) => {
+        setNewsDetail(response);
+        setLoading(false);
+      });
   }, []);
 
   if (news.length !== 0) {
-    console.log(news);
+    // console.log(news);
   }
 
+  console.log(newsDetail);
   return (
     <AllContext.Provider
       value={{
         news,
+        newsDetail,
+        loading,
       }}
     >
       <Header />
