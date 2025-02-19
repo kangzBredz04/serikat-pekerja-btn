@@ -1,5 +1,5 @@
 async function send(endpoint, method, body, header = "application/json") {
-    const response = await fetch(`http://localhost:3000/api${endpoint}`, {
+    const response = await fetch(`https://serikat-pekerja-btn-api.vercel.app/api${endpoint}`, {
         method,
         credentials: "include",
         headers: {
