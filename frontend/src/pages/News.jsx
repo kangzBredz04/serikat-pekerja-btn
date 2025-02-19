@@ -12,7 +12,7 @@ const News = () => {
   const currentItems = news.slice(indexOfFirstItem, indexOfLastItem);
   const totalPages = Math.ceil(news.length / itemsPerPage);
 
-  console.log(news);
+  // console.log(news);
 
   return (
     <div className="max-w-7xl mx-auto py-10 px-4 text-center">
@@ -40,7 +40,12 @@ const News = () => {
             </h3>
             <a
               className="flex items-center text-blue-600 mt-4 font-medium cursor-pointer"
-              onClick={() => localStorage.setItem("id_news", item.id)}
+              onClick={() => {
+                localStorage.setItem("id_news", item.id);
+                window.location.href = `/news/${localStorage.getItem(
+                  "id_news"
+                )}`;
+              }}
             >
               Read More <FaArrowRight className="ml-2" />
             </a>
