@@ -39,8 +39,8 @@ const News = () => {
               {item.title}
             </h3>
             <a
-              href="#"
               className="flex items-center text-blue-600 mt-4 font-medium"
+              // onClick={() => alert(item.content)}
             >
               Read More <FaArrowRight className="ml-2" />
             </a>
