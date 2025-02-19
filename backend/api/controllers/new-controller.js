@@ -8,3 +8,12 @@ export const getAllNew = async (_req, res) => {
         res.status(500).json({ msg: error.message })
     }
 }
+
+export const getNewById = async (req, res) => {
+    try {
+        const result = await pool.query("SELECT * FROM news WHERE id = $1", [req.params.id]);
+        res.json(result.rows[0]);
+    } catch (error) {
+        res.status(500).json({ msg: error.message })
+    }
+}
