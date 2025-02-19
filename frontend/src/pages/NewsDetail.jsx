@@ -24,7 +24,7 @@ function NewsDetail() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-white shadow-lg rounded-lg">
+    <div className="max-w-3xl mx-auto p-6 bg-white rounded-lg">
       <h1 className="text-3xl font-bold text-gray-900">{newsDetail.title}</h1>
       <p className="text-gray-500 text-sm mt-2">
         {new Date(newsDetail.created_at).toLocaleString()}
@@ -37,10 +37,17 @@ function NewsDetail() {
         alt="News"
         className="w-full h-auto mt-4 rounded-lg"
       />
-      <div className="mt-6 text-gray-700 space-y-4">
-        {newsDetail.content.split("\n").map((paragraph, index) => (
-          <p key={index}>{paragraph}</p>
-        ))}
+      {/* Perbaikan menangani \n dengan benar */}
+      <div className="mt-6 text-gray-700 space-y-4 text-justify">
+        {newsDetail.content
+          .split("\\n") // Ubah "\n" literal menjadi karakter newline
+          .join("\n") // Pastikan formatnya benar
+          .split("\n") // Pecah menjadi array
+          .map((paragraph, index) => (
+            <p className="mb-4" key={index}>
+              {paragraph}
+            </p>
+          ))}
       </div>
     </div>
   );
