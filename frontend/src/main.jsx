@@ -9,6 +9,8 @@ import Gallery from "./pages/Gallery.jsx";
 import News from "./pages/News.jsx";
 import NewsDetail from "./pages/NewsDetail.jsx";
 import Login from "./pages/Login.jsx";
+import Dashboard from "./pages/Dashboard.jsx";
+import Unauthorized from "./pages/Unauthorized.jsx";
 
 const router = createBrowserRouter([
   {
@@ -38,6 +40,14 @@ const router = createBrowserRouter([
       {
         path: "/news/:id",
         element: <NewsDetail />,
+      },
+      {
+        path: "/dashboard",
+        element: <Dashboard />,
+      },
+      {
+        path: "/unauthorized",
+        element: <Unauthorized />,
       },
     ],
   },
