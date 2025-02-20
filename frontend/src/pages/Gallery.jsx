@@ -28,7 +28,7 @@ function Gallery() {
 
   return (
     <div className="max-w-7xl mx-auto py-10 px-4 text-center">
-      <h1 className="text-3xl font-bold text-blue-700 mb-6">Gallery</h1>
+      <h1 className="text-3xl font-bold text-red-700 mb-6">Gallery</h1>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {currentItems.map((item, index) => (
           <div
@@ -50,7 +50,7 @@ function Gallery() {
         <button
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
           disabled={currentPage === 1}
-          className="p-2 bg-blue-700 text-white rounded-md disabled:opacity-50"
+          className="p-2 bg-red-700 text-white rounded-md disabled:opacity-50"
         >
           <FaChevronLeft />
         </button>
@@ -58,9 +58,9 @@ function Gallery() {
           <button
             key={index}
             onClick={() => setCurrentPage(index + 1)}
-            className={`px-3 py-1 rounded-md ${
+            className={`px-3 py-1 rounded-md cursor-pointer ${
               currentPage === index + 1
-                ? "bg-blue-700 text-white"
+                ? "bg-red-700 text-white"
                 : "bg-gray-200"
             }`}
           >
@@ -72,7 +72,7 @@ function Gallery() {
             setCurrentPage((prev) => Math.min(prev + 1, totalPages))
           }
           disabled={currentPage === totalPages}
-          className="p-2 bg-blue-700 text-white rounded-md disabled:opacity-50"
+          className="p-2 bg-red-700 text-white rounded-md disabled:opacity-50"
         >
           <FaChevronRight />
         </button>
