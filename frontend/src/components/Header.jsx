@@ -18,30 +18,33 @@ function Header() {
 
       {/* Navigation Links (Hidden on mobile) */}
       <nav className="hidden md:flex space-x-6 font-semibold">
-        <Link className="text-blue-600 hover:text-blue-800" to="/">
+        <Link className="text-red-600 hover:text-red-800" to="/">
           Home
         </Link>
-        <Link className="text-blue-600 hover:text-blue-800" to="/organization">
+        <Link className="text-red-600 hover:text-red-800" to="/organization">
           Organization
         </Link>
-        <Link className="text-blue-600 hover:text-blue-800" to="/gallery">
+        <Link className="text-red-600 hover:text-red-800" to="/gallery">
           Gallery
         </Link>
-        <Link className="text-blue-600 hover:text-blue-800" to="/news">
+        <Link className="text-red-600 hover:text-red-800" to="/news">
           News
         </Link>
       </nav>
 
       {/* Sign In Button (Hidden on mobile) */}
       <div className="hidden md:block">
-        <button className="bg-blue-600 text-white px-6 py-2 rounded-full font-semibold shadow-md hover:bg-blue-800 cursor-pointer">
+        <Link
+          to={"/login"}
+          className="bg-red-600 text-white px-6 py-2 rounded-full font-semibold shadow-md hover:bg-red-800 cursor-pointer"
+        >
           Sign In
-        </button>
+        </Link>
       </div>
 
       {/* Burger Toggle Button */}
       <button
-        className="md:hidden text-blue-600 text-2xl focus:outline-none"
+        className="md:hidden text-red-600 text-2xl focus:outline-none"
         onClick={() => setMenuOpen(!menuOpen)}
       >
         {menuOpen ? <FaTimes /> : <FaBars />}
@@ -54,46 +57,47 @@ function Header() {
         }`}
       >
         <button
-          className="absolute top-5 right-5 text-blue-600 text-2xl focus:outline-none"
+          className="absolute top-5 right-5 text-red-600 text-2xl focus:outline-none"
           onClick={() => setMenuOpen(false)}
         >
           <FaTimes />
         </button>
         <nav className="flex flex-col items-center mt-20 space-y-6 font-semibold">
           <Link
-            className="text-blue-600 hover:text-blue-800 text-lg"
+            className="text-red-600 hover:text-red-800 text-lg"
             to="/"
             onClick={() => setMenuOpen(false)}
           >
             Home
           </Link>
           <Link
-            className="text-blue-600 hover:text-blue-800 text-lg"
+            className="text-red-600 hover:text-red-800 text-lg"
             to="/organization"
             onClick={() => setMenuOpen(false)}
           >
             Organization
           </Link>
           <Link
-            className="text-blue-600 hover:text-blue-800 text-lg"
+            className="text-red-600 hover:text-red-800 text-lg"
             to="/gallery"
             onClick={() => setMenuOpen(false)}
           >
             Gallery
           </Link>
           <Link
-            className="text-blue-600 hover:text-blue-800 text-lg"
+            className="text-red-600 hover:text-red-800 text-lg"
             to="/news"
             onClick={() => setMenuOpen(false)}
           >
             News
           </Link>
-          <button
-            className="bg-blue-600 text-white px-6 py-2 rounded-full font-semibold shadow-md hover:bg-blue-800 cursor-pointer"
+          <Link
+            to="/login"
+            className="bg-red-600 text-white px-6 py-2 rounded-full font-semibold shadow-md hover:bg-red-800 cursor-pointer"
             onClick={() => setMenuOpen(false)}
           >
             Sign In
-          </button>
+          </Link>
         </nav>
       </div>
     </header>
