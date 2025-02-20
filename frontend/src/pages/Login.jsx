@@ -1,4 +1,35 @@
+import { useState } from "react";
+import { api } from "../utils";
+
 function Login() {
+  const [login, setLogin] = useState({
+    username: "",
+    password: "",
+  });
+
+  function handleChange(e) {
+    setLogin({
+      ...login,
+      [e.target.name]: e.target.value,
+    });
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    api.post("/auth/login", login).then((response) => {
+      if (!response.token) {
+        alert(response.msg);
+        // console.log(response);
+      } else {
+        alert(response.msg);
+        localStorage.setItem("id_admin", response.data.id);
+        localStorage.setItem("full_name", response.data.full_name);
+        // console.log(response);
+        window.location.reload();
+      }
+    });
+  }
+
   return (
     <div className="flex flex-col md:flex-row h-screen w-full">
       {/* Left Side (Dummy Image with Back Button) */}
@@ -20,13 +51,18 @@ function Login() {
           <h2 className="text-2xl font-bold mb-6 text-gray-800">
             Masuk ke Akun Anda
           </h2>
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="mb-4">
               <label className="block text-gray-700 font-medium mb-1">
                 Username *
               </label>
               <input
                 type="text"
+                id="username"
+                name="username"
+                value={login.username}
+                onChange={handleChange}
+                required
                 placeholder="Masukkan username"
                 className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
               />
@@ -38,12 +74,20 @@ function Login() {
               </label>
               <input
                 type="password"
+                id="password"
+                name="password"
+                value={login.password}
+                onChange={handleChange}
+                required
                 placeholder="Masukkan kata sandi"
                 className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
               />
             </div>
 
-            <button className="w-full bg-red-700 text-white p-3 rounded-md hover:bg-red-800 transition">
+            <button
+              type="submit"
+              className="w-full bg-red-700 text-white p-3 rounded-md hover:bg-red-800 transition cursor-pointer"
+            >
               Masuk
             </button>
           </form>
