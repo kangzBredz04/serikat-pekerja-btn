@@ -34,7 +34,7 @@ function Header() {
 
       {/* Sign In Button (Hidden on mobile) */}
       <div className="hidden md:block">
-        <button className="bg-blue-600 text-white px-6 py-2 rounded-full font-semibold shadow-md hover:bg-blue-800">
+        <button className="bg-blue-600 text-white px-6 py-2 rounded-full font-semibold shadow-md hover:bg-blue-800 cursor-pointer">
           Sign In
         </button>
       </div>
@@ -89,7 +89,7 @@ function Header() {
             News
           </Link>
           <button
-            className="bg-blue-600 text-white px-6 py-2 rounded-full font-semibold shadow-md hover:bg-blue-800"
+            className="bg-blue-600 text-white px-6 py-2 rounded-full font-semibold shadow-md hover:bg-blue-800 cursor-pointer"
             onClick={() => setMenuOpen(false)}
           >
             Sign In
