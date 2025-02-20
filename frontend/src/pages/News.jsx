@@ -21,9 +21,7 @@ const News = () => {
 
   return (
     <div className="max-w-7xl mx-auto py-10 px-4 text-center">
-      <h2 className="text-3xl font-bold text-blue-600 mb-6 text-center">
-        News
-      </h2>
+      <h2 className="text-3xl font-bold text-red-600 mb-6 text-center">News</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {loading
           ? Array.from({ length: 3 }).map((_, index) => (
@@ -58,7 +56,7 @@ const News = () => {
                   {item.title}
                 </h3>
                 <a
-                  className="flex items-center text-blue-600 mt-4 font-medium cursor-pointer"
+                  className="flex items-center text-red-600 mt-4 font-medium cursor-pointer"
                   onClick={() => {
                     localStorage.setItem("id_news", item.id);
                     window.location.href = `/news/${localStorage.getItem(
@@ -77,7 +75,7 @@ const News = () => {
           className={`p-2 rounded-lg font-semibold text-lg ${
             currentPage === 1
               ? "bg-gray-300 cursor-not-allowed"
-              : "bg-blue-600 text-white hover:cursor-pointer"
+              : "bg-red-600 text-white hover:cursor-pointer"
           }`}
           disabled={currentPage === 1}
         >
@@ -89,7 +87,7 @@ const News = () => {
             onClick={() => setCurrentPage(i + 1)}
             className={`px-3 py-1 rounded-lg font-semibold text-lg ${
               currentPage === i + 1
-                ? "bg-blue-600 text-white"
+                ? "bg-red-600 text-white"
                 : "bg-gray-200 text-gray-700"
             } hover:cursor-pointer`}
           >
@@ -103,7 +101,7 @@ const News = () => {
           className={`p-2 rounded-lg font-semibold text-lg ${
             currentPage === totalPages
               ? "bg-gray-300 cursor-not-allowed"
-              : "bg-blue-600 text-white hover:cursor-pointer"
+              : "bg-red-600 text-white hover:cursor-pointer"
           }`}
           disabled={currentPage === totalPages}
         >
