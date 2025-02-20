@@ -2,7 +2,8 @@ import express from "express";
 import "dotenv/config";
 import cors from "cors";
 
-import NewRoute from "./routes/new-route.js"
+import NewRoute from "./routes/new-route.js";
+import AuthRoute from "./routes/auth-route.js";
 
 const app = express();
 
@@ -19,6 +20,7 @@ const router = express.Router();
 app.use("/api", router);
 
 router.use("/new", NewRoute);
+router.use("/auth", AuthRoute);
 
 router.get("/", (_req, res) => {
     res.status(200).json({ msg: "API berhasil dijalankan." });
