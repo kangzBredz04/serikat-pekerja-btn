@@ -23,11 +23,11 @@ function Login() {
           <form>
             <div className="mb-4">
               <label className="block text-gray-700 font-medium mb-1">
-                Nomor Personal / Email *
+                Username *
               </label>
               <input
                 type="text"
-                placeholder="Masukkan nomor personal atau email"
+                placeholder="Masukkan username"
                 className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
               />
             </div>
