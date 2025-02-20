@@ -27,8 +27,17 @@ function NewsDetail() {
     <div className="max-w-3xl mx-auto p-6 bg-white rounded-lg">
       <h1 className="text-3xl font-bold text-gray-900">{newsDetail.title}</h1>
       <p className="text-gray-500 text-sm mt-2">
-        {new Date(newsDetail.created_at).toLocaleString()}
+        {new Date(newsDetail.created_at).toLocaleString("id-ID", {
+          weekday: "long", // Menampilkan nama hari
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          hourCycle: "h23", // Format 24 jam
+        })}
       </p>
+
       <img
         src={
           newsDetail.image_url ||
