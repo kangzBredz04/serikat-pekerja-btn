@@ -7,7 +7,7 @@ const Organization = () => {
     <div className="max-w-5xl mx-auto px-4 py-10 text-center">
       <div className="space-y-6">
         {/* Sejarah Kami */}
-        <h1 className="text-3xl md:text-4xl font-bold text-blue-700">
+        <h1 className="text-3xl md:text-4xl font-bold text-red-700">
           Sejarah Kami
         </h1>
         <p className="text-gray-700 text-sm md:text-base leading-relaxed text-left">
@@ -28,13 +28,13 @@ const Organization = () => {
 
         {/* Visi dan Misi */}
         <div className="bg-white p-6 text-left">
-          <h2 className="text-2xl font-bold text-blue-700">Visi</h2>
+          <h2 className="text-2xl font-bold text-red-700">Visi</h2>
           <p className="text-gray-700 text-sm md:text-base leading-relaxed mt-2">
             Menjadi organisasi pekerja yang profesional, berintegritas, dan
             berperan aktif dalam meningkatkan kesejahteraan anggota.
           </p>
 
-          <h2 className="text-2xl font-bold text-blue-700 mt-6">Misi</h2>
+          <h2 className="text-2xl font-bold text-red-700 mt-6">Misi</h2>
           <ul className="list-disc list-inside text-gray-700 text-sm md:text-base leading-relaxed mt-2">
             <li>
               Melindungi dan memperjuangkan hak serta kepentingan pekerja BTN.
@@ -50,7 +50,7 @@ const Organization = () => {
         </div>
 
         {/* Struktur Organisasi */}
-        <h2 className="text-2xl font-bold text-blue-700 mt-8">
+        <h2 className="text-2xl font-bold text-red-700 mt-8">
           Struktur Organisasi SP-BTN
         </h2>
         <div className="mt-6 bg-white p-6 text-center">
