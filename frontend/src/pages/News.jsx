@@ -49,8 +49,8 @@ const News = () => {
                   />
                 ) : (
                   <div className="h-48 bg-gradient-to-r from-blue-500 to-red-500 rounded-t-lg flex items-center justify-center">
-                    <span className="text-white text-lg font-bold">
-                      {item.category}
+                    <span className="text-white text-md text-center font-bold">
+                      {item.title}
                     </span>
                   </div>
                 )}
