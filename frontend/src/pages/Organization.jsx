@@ -68,7 +68,7 @@ const Organization = () => {
         <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center p-4 z-50">
           <div className="relative">
             <button
-              className="absolute -top-4 -right-4 text-white bg-red-500 rounded-full p-1"
+              className="absolute -top-4 -right-4 text-white bg-red-500 rounded-full p-1 cursor-pointer"
               onClick={() => setIsOpen(false)}
             >
               <IoClose size={24} />
