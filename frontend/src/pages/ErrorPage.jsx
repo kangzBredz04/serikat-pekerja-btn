@@ -1,9 +1,9 @@
-export default function NotFoundPage() {
+export default function ErrorPage() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-6 text-center">
-      <h1 className="text-7xl font-extrabold text-gray-900 sm:text-9xl">404</h1>
+      <h1 className="text-7xl font-extrabold text-red-600 sm:text-9xl">500</h1>
       <p className="text-lg text-gray-600 mt-4 sm:text-xl">
-        Oops! Halaman yang Anda cari tidak ditemukan.
+        Maaf, terjadi kesalahan pada server atau aplikasi.
       </p>
       <a
         href="/"
