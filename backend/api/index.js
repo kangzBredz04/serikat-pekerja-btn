@@ -4,6 +4,7 @@ import cors from "cors";
 
 import NewRoute from "./routes/new-route.js";
 import AuthRoute from "./routes/auth-route.js";
+import GalleryRoute from "./routes/gallery-route.js";
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use("/api", router);
 
 router.use("/new", NewRoute);
 router.use("/auth", AuthRoute);
+router.use("/gallery", GalleryRoute);
 
 router.get("/", (_req, res) => {
     res.status(200).json({ msg: "API berhasil dijalankan." });
