@@ -10,12 +10,13 @@ import News from "./pages/News.jsx";
 import NewsDetail from "./pages/NewsDetail.jsx";
 import Login from "./pages/Login.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
-import Unauthorized from "./pages/Unauthorized.jsx";
+import NotFoundPage from "./pages/ErrorPage.jsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
+    errorElement: <NotFoundPage />,
     children: [
       {
         path: "/",
@@ -44,10 +45,6 @@ const router = createBrowserRouter([
       {
         path: "/dashboard",
         element: <Dashboard />,
-      },
-      {
-        path: "/unauthorized",
-        element: <Unauthorized />,
       },
     ],
   },
