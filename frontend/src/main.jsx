@@ -11,6 +11,7 @@ import NewsDetail from "./pages/NewsDetail.jsx";
 import Login from "./pages/Login.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import NotFoundPage from "./pages/ErrorPage.jsx";
+import NewsCrud from "./pages/NewsCrud.jsx";
 
 const router = createBrowserRouter([
   {
@@ -43,8 +44,12 @@ const router = createBrowserRouter([
         element: <NewsDetail />,
       },
       {
-        path: "/dashboard",
+        path: "/admin-dashboard",
         element: <Dashboard />,
+      },
+      {
+        path: "/admin-news",
+        element: <NewsCrud />,
       },
     ],
   },
