@@ -25,10 +25,14 @@ function Header() {
     window.location.href = "/login";
   };
 
+  const redirectUrl = localStorage.getItem("id_admin")
+    ? "/admin-dashboard"
+    : "/";
+
   return (
     <header className="w-full bg-white shadow-md py-3 px-6 md:px-10 lg:px-32 flex justify-between items-center sticky top-0 z-50">
       {/* Logo */}
-      <Link to="/" className="flex items-center">
+      <Link to={redirectUrl} className="flex items-center">
         <img
           src="/serikat-pekerja-btn-logo.png"
           alt="Logo"
@@ -40,16 +44,22 @@ function Header() {
       <nav className="hidden md:flex space-x-6 font-semibold">
         {isAdmin ? (
           <>
-            <Link className="text-red-600 hover:text-red-800" to="/dashboard">
+            <Link
+              className="text-red-600 hover:text-red-800"
+              to="/admin-dashboard"
+            >
               Dashboard
             </Link>
-            <Link className="text-red-600 hover:text-red-800" to="/news">
+            <Link className="text-red-600 hover:text-red-800" to="/admin-news">
               News
             </Link>
-            <Link className="text-red-600 hover:text-red-800" to="/gallery">
+            <Link
+              className="text-red-600 hover:text-red-800"
+              to="/admin-gallery"
+            >
               Gallery
             </Link>
-            <Link className="text-red-600 hover:text-red-800" to="/users">
+            <Link className="text-red-600 hover:text-red-800" to="/admin-users">
               Users
             </Link>
           </>
