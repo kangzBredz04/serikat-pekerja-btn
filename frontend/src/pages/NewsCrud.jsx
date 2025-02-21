@@ -1,6 +1,7 @@
 import { useState, useContext } from "react";
 import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
 import { AllContext } from "../App";
+import { api } from "../utils";
 
 export default function NewsCrud() {
   const { news } = useContext(AllContext);
@@ -17,10 +18,6 @@ export default function NewsCrud() {
     setSelectedNews(newsItem);
     setViewOnly(viewOnly);
     setModalOpen(true);
-  };
-
-  const handleDelete = (id) => {
-    alert("Hapus data?");
   };
 
   const filteredNews = news.filter(
@@ -94,7 +91,23 @@ export default function NewsCrud() {
                     <FaEdit />
                   </button>
                   <button
-                    onClick={() => handleDelete(item.id)}
+                    onClick={() => {
+                      if (
+                        confirm(
+                          `Apakah anda yakin ingin menghapus berita ${item.title}`
+                        )
+                      ) {
+                        api
+                          .delete(`/new/delete-by-id/${item.id}`)
+                          .then(async (res) => {
+                            alert(res.message);
+                          })
+                          .catch((e) => {
+                            console.log(e);
+                          });
+                        // window.location.href = "/admin-news";
+                      }
+                    }}
                     className="text-red-500"
                   >
                     <FaTrash />
