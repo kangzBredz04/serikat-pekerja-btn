@@ -67,7 +67,7 @@ function Dashboard() {
             </div>
           </div>
           <a
-            href="/news"
+            href="/admin-news"
             className="text-red-500 text-sm mt-4 block hover:underline"
           >
             Read More →
@@ -84,7 +84,7 @@ function Dashboard() {
             </div>
           </div>
           <a
-            href="/users"
+            href="/admin-users"
             className="text-blue-500 text-sm mt-4 block hover:underline"
           >
             Read More →
@@ -101,7 +101,7 @@ function Dashboard() {
             </div>
           </div>
           <a
-            href="/gallery"
+            href="/admin-gallery"
             className="text-green-500 text-sm mt-4 block hover:underline"
           >
             Read More →
