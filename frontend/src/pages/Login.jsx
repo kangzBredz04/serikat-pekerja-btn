@@ -27,7 +27,7 @@ function Login() {
         setPopup({ show: true, success: true, message: "Login berhasil!" });
         localStorage.setItem("id_admin", response.data.id);
         localStorage.setItem("full_name", response.data.full_name);
-        setTimeout(() => (window.location.href = "/dashboard"), 1500);
+        setTimeout(() => (window.location.href = "/admin-dashboard"), 1500);
       }
     });
   }
