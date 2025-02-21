@@ -1,4 +1,8 @@
 export default function ErrorPage() {
+  const redirectUrl = localStorage.getItem("id_admin")
+    ? "/admin-dashboard"
+    : "/";
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-6 text-center">
       <h1 className="text-7xl font-extrabold text-red-600 sm:text-9xl">500</h1>
@@ -6,10 +10,11 @@ export default function ErrorPage() {
         Maaf, terjadi kesalahan pada server atau aplikasi.
       </p>
       <a
-        href="/"
+        href={redirectUrl}
         className="mt-6 px-6 py-3 bg-red-600 text-white text-lg font-semibold rounded-lg shadow-md hover:bg-red-700 transition duration-300 ease-in-out"
       >
-        Kembali ke Beranda
+        Kembali ke{" "}
+        {redirectUrl === "/admin-dashboard" ? "Dashboard Admin" : "Beranda"}
       </a>
     </div>
   );
