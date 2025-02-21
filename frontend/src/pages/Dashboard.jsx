@@ -1,18 +1,29 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaNewspaper, FaUsers, FaImages } from "react-icons/fa";
-import { api } from "../utils";
+import { FaNewspaper, FaUsers, FaImages, FaUpload } from "react-icons/fa";
+import { AllContext } from "../App";
 
 function Dashboard() {
   const navigate = useNavigate();
+  const { news, gallery, users } = useContext(AllContext);
+
   const [stats, setStats] = useState({
-    newsCount: 10,
-    usersCount: 10,
-    galleryCount: 10,
+    newsCount: 0,
+    usersCount: 0,
+    galleryCount: 0,
   });
+
   const [orgImage, setOrgImage] = useState(
     localStorage.getItem("orgImage") || ""
   );
+
+  useEffect(() => {
+    setStats({
+      newsCount: news?.length || 0,
+      usersCount: users?.length || 0,
+      galleryCount: gallery?.length || 0,
+    });
+  }, [news, users, gallery]);
 
   useEffect(() => {
     const adminId = localStorage.getItem("id_admin");
@@ -41,7 +52,7 @@ function Dashboard() {
   };
 
   return (
-    <div className="min-h-[80vh] bg-gray-100 p-6 mx-auto max-w-6xl">
+    <div className="min-h-[80vh] p-6 mx-auto max-w-6xl">
       <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
         Dashboard Admin
       </h1>
@@ -99,7 +110,7 @@ function Dashboard() {
       </div>
 
       {/* Struktur Organisasi */}
-      <div className="mt-8 p-6 bg-white shadow-lg rounded-lg text-center">
+      <div className="mt-8 p-6 bg-white rounded-lg shadow-lg text-center border border-gray-200">
         <h2 className="text-xl font-bold mb-4">Struktur Organisasi</h2>
         {orgImage ? (
           <div>
@@ -116,13 +127,18 @@ function Dashboard() {
             </button>
           </div>
         ) : (
-          <div>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              className="block mx-auto"
-            />
+          <div className="border-2 border-dashed border-gray-300 p-6 rounded-lg flex flex-col items-center justify-center">
+            <FaUpload className="text-gray-400 text-6xl mb-4" />
+            <p className="text-gray-600 mb-2">Upload Struktur Organisasi</p>
+            <label className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700">
+              Pilih Gambar
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="hidden"
+              />
+            </label>
           </div>
         )}
       </div>
