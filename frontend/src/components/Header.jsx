@@ -140,28 +140,28 @@ function Header() {
             <>
               <Link
                 className="text-red-600 hover:text-red-800 text-lg"
-                to="/dashboard"
+                to="/admin-dashboard"
                 onClick={() => setMenuOpen(false)}
               >
                 Dashboard
               </Link>
               <Link
                 className="text-red-600 hover:text-red-800 text-lg"
-                to="/news"
+                to="/admin-news"
                 onClick={() => setMenuOpen(false)}
               >
                 News
               </Link>
               <Link
                 className="text-red-600 hover:text-red-800 text-lg"
-                to="/gallery"
+                to="/admin-gallery"
                 onClick={() => setMenuOpen(false)}
               >
                 Gallery
               </Link>
               <Link
                 className="text-red-600 hover:text-red-800 text-lg"
-                to="/users"
+                to="/admin-users"
                 onClick={() => setMenuOpen(false)}
               >
                 Users
