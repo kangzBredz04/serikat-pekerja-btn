@@ -14,34 +14,46 @@ export const storage = multer.diskStorage({
 export const upload = multer({ storage: storage })
 
 export const uploadImage = async (req, res) => {
-    if (!req.file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$/)) {
-        return res.status(400).send({ msg: "Image format not supported." });
-    } else {
-        const image = req.file.filename
-        const id = 1
+    try {
+        const { originalname, mimetype, buffer } = req.file;
+        const base64Image = buffer.toString("base64");
 
-        console.log(image);
+        const query = `INSERT INTO organizational_structure (filename, mimetype, image_base64) VALUES ($1, $2, $3) RETURNING *`;
+        const values = [originalname, mimetype, base64Image];
 
-        try {
-            const result = await pool.query(
-                "UPDATE organizational_structure SET image_url = $1 WHERE id = $2 RETURNING *",
-                [image, id]
-            )
-            res.status(200).json({
-                msg: "Gambar berhasil di update",
-                data: result.rows[0]
-            });
-        } catch (error) {
-            res.status(500).send("error");
-        }
+        const result = await pool.query(query, values);
+        res.json({
+            success: true,
+            message: "Gambar berhasil diunggah!",
+            data: result.rows[0],
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: "Upload gagal!" });
     }
 }
 
 export const getImage = async (req, res) => {
     try {
-        const result = await pool.query("SELECT * FROM organizational_structure WHERE id = $1", [1]);
-        res.status(200).json(result.rows[0]);
+        const { id } = req.params;
+        const query = `SELECT * FROM images WHERE id = $1`;
+        const result = await pool.query(query, [id]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ success: false, message: "Gambar tidak ditemukan!" });
+        }
+
+        const image = result.rows[0];
+        const imgBuffer = Buffer.from(image.image_base64, "base64");
+
+        res.writeHead(200, {
+            "Content-Type": image.mimetype,
+            "Content-Length": imgBuffer.length,
+        });
+
+        res.end(imgBuffer);
     } catch (error) {
-        res.status(500).json({ msg: error.message });
+        console.error(error);
+        res.status(500).json({ success: false, message: "Gagal mengambil gambar!" });
     }
 }
