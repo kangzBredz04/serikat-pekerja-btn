@@ -13,9 +13,7 @@ function Dashboard() {
     galleryCount: 0,
   });
 
-  const [orgImage, setOrgImage] = useState(
-    localStorage.getItem("orgImage") || ""
-  );
+  const [orgImage, setOrgImage] = useState("");
 
   useEffect(() => {
     setStats({
@@ -28,22 +26,60 @@ function Dashboard() {
   useEffect(() => {
     const adminId = localStorage.getItem("id_admin");
     const fullName = localStorage.getItem("full_name");
+    fetchImage();
+    console.log(orgImage);
 
     if (!adminId || !fullName) {
       navigate("/unauthorized");
     }
-  }, [navigate]);
+  }, [navigate, orgImage]);
+
+  const fetchImage = () => {
+    fetch(
+      `http://localhost:3000/api/organizational-structure/get-image-organizational-structure`,
+      {
+        credentials: "include",
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+          Accept: "application/json, text/html",
+        },
+      }
+    )
+      .then((resp) => resp.json())
+      .then((res) => {
+        if (res.data && res.data.image_url) {
+          setOrgImage(`http://localhost:3000/${res.data.image_url}`);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching image:", error);
+      });
+  };
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setOrgImage(reader.result);
-        localStorage.setItem("orgImage", reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("image", file);
+
+    fetch(`http://localhost:3000/api/organizational-structure/image`, {
+      method: "POST",
+      body: formData,
+      credentials: "include",
+    })
+      .then((response) => response.json())
+      .then((resp) => {
+        if (resp.data && resp.data.image_url) {
+          setOrgImage(`http://localhost:3000/${resp.data.image_url}`);
+          alert(resp.msg);
+          fetchImage(); // Fetch ulang setelah upload berhasil
+        }
+      })
+      .catch((error) => {
+        alert("Upload failed: " + error);
+      });
   };
 
   const handleRemoveImage = () => {
@@ -137,6 +173,7 @@ function Dashboard() {
                 accept="image/*"
                 onChange={handleImageChange}
                 className="hidden"
+                multiple={false}
               />
             </label>
           </div>
