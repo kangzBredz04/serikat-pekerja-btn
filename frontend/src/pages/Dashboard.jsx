@@ -13,7 +13,8 @@ function Dashboard() {
     galleryCount: 0,
   });
 
-  const [orgImage, setOrgImage] = useState("");
+  const [orgImage, setOrgImage] = useState(null);
+  const [uploadedImage, setUploadedImage] = useState(null);
 
   useEffect(() => {
     setStats({
@@ -26,60 +27,45 @@ function Dashboard() {
   useEffect(() => {
     const adminId = localStorage.getItem("id_admin");
     const fullName = localStorage.getItem("full_name");
-    fetchImage();
-    console.log(orgImage);
 
     if (!adminId || !fullName) {
       navigate("/unauthorized");
     }
   }, [navigate, orgImage]);
 
-  const fetchImage = () => {
-    fetch(
-      `http://localhost:3000/api/organizational-structure/get-image-organizational-structure`,
-      {
-        credentials: "include",
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json; charset=utf-8",
-          Accept: "application/json, text/html",
-        },
-      }
-    )
-      .then((resp) => resp.json())
-      .then((res) => {
-        if (res.data && res.data.image_url) {
-          setOrgImage(`http://localhost:3000/${res.data.image_url}`);
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching image:", error);
-      });
-  };
+  const backendUrl = "http://localhost:3000";
 
   const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    if (!file) return;
+    setOrgImage(event.target.files[0]);
+  };
+
+  const handleUpload = async () => {
+    if (!orgImage) {
+      alert("Pilih gambar terlebih dahulu!");
+      return;
+    }
 
     const formData = new FormData();
-    formData.append("image", file);
+    formData.append("image", orgImage);
 
-    fetch(`http://localhost:3000/api/organizational-structure/image`, {
-      method: "POST",
-      body: formData,
-      credentials: "include",
-    })
-      .then((response) => response.json())
-      .then((resp) => {
-        if (resp.data && resp.data.image_url) {
-          setOrgImage(`http://localhost:3000/${resp.data.image_url}`);
-          alert(resp.msg);
-          fetchImage(); // Fetch ulang setelah upload berhasil
-        }
-      })
-      .catch((error) => {
-        alert("Upload failed: " + error);
+    try {
+      const response = await fetch(`${backendUrl}/upload`, {
+        method: "POST",
+        body: formData,
       });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setUploadedImage(result.data);
+        alert("Gambar berhasil diunggah!");
+      } else {
+        alert("Upload gagal!");
+      }
+    } catch (error) {
+      console.error("Upload gagal", error);
+      alert("Gagal mengunggah gambar!");
+    }
   };
 
   const handleRemoveImage = () => {
@@ -176,6 +162,12 @@ function Dashboard() {
                 multiple={false}
               />
             </label>
+            <button
+              // onClick={handleUploadImage}
+              className="mt-4 px-4 py-2 bg-green-500 text-white rounded-lg shadow-md hover:bg-green-700"
+            >
+              Upload Gambar
+            </button>
           </div>
         )}
       </div>
