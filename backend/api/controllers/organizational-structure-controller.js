@@ -1,17 +1,8 @@
 import { pool } from "../config/db.js"
 import multer from 'multer'
 
-export const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, "./api/");
-    },
-    filename: function (req, file, cb) {
-        const ext = file.mimetype.split("/")[1]
-        cb(null, `uploads/${file.originalname}-${Date.now()}.${ext}`);
-    }
-})
-
-export const upload = multer({ storage: storage })
+const storage = multer.memoryStorage();
+export const upload = multer({ storage });
 
 export const uploadImage = async (req, res) => {
     try {
@@ -36,7 +27,7 @@ export const uploadImage = async (req, res) => {
 export const getImage = async (req, res) => {
     try {
         const { id } = req.params;
-        const query = `SELECT * FROM images WHERE id = $1`;
+        const query = `SELECT * FROM organizational_structure WHERE id = $1`;
         const result = await pool.query(query, [id]);
 
         if (result.rows.length === 0) {
