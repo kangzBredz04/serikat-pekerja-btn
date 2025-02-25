@@ -5,6 +5,6 @@ import { getImage, upload, uploadImage } from "../controllers/organizational-str
 const router = express.Router();
 
 router.post("/image", upload.single("image"), uploadImage);
-router.get("/get-image-organizational-structure/:id", getImage);
+router.get("/get-image-organizational-structure", getImage);
 
 export default router;
