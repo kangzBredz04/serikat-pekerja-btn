@@ -92,6 +92,7 @@ function Dashboard() {
   useEffect(() => {
     handleFetchImage();
   }, []);
+
   return (
     <div className="min-h-[80vh] p-6 mx-auto max-w-6xl">
       <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">

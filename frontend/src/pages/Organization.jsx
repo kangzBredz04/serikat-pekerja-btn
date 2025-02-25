@@ -1,8 +1,34 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
 
 const Organization = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [fetchedImage, setFetchedImage] = useState(null);
+
+  const backendUrl = "http://localhost:3000/api";
+
+  const handleFetchImage = async () => {
+    try {
+      const response = await fetch(
+        `${backendUrl}/organizational-structure/get-image-organizational-structure`
+      );
+
+      if (!response.ok) {
+        alert("Gagal mengambil gambar!");
+        return;
+      }
+
+      const imageUrl = URL.createObjectURL(await response.blob());
+      setFetchedImage(imageUrl);
+    } catch (error) {
+      console.error("Gagal mengambil gambar", error);
+      alert("Gagal mengambil gambar!");
+    }
+  };
+
+  useEffect(() => {
+    handleFetchImage();
+  }, []);
   return (
     <div className="max-w-5xl mx-auto px-4 py-10 text-center">
       <div className="space-y-6">
@@ -55,8 +81,8 @@ const Organization = () => {
         </h2>
         <div className="mt-6 bg-white p-6 text-center">
           <img
-            src="/struktur-organisasi.png"
-            alt="Struktur Organisasi SPNAS BTN"
+            src={fetchedImage}
+            alt="Struktur Organisasi SP-BTN"
             className="mx-auto w-full max-w-md md:max-w-lg lg:max-w-2xl cursor-pointer"
             onClick={() => setIsOpen(true)}
           />
@@ -74,8 +100,8 @@ const Organization = () => {
               <IoClose size={24} />
             </button>
             <img
-              src="/struktur-organisasi.png"
-              alt="Struktur Organisasi"
+              src={fetchedImage}
+              alt="Struktur Organisasi SP-BTN"
               className="w-auto max-w-full h-auto max-h-[90vh] rounded-lg"
             />
           </div>
