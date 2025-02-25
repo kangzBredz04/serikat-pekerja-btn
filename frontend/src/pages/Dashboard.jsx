@@ -18,7 +18,7 @@ function Dashboard() {
   const [imageId, setImageId] = useState("");
   const [fetchedImage, setFetchedImage] = useState(null);
 
-  const backendUrl = "http://localhost:3000";
+  const backendUrl = "http://localhost:3000/api";
 
   useEffect(() => {
     setStats({
@@ -52,7 +52,7 @@ function Dashboard() {
 
     try {
       const response = await fetch(
-        `${backendUrl}/api/organizational-structure/image`,
+        `${backendUrl}/organizational-structure/image`,
         {
           method: "POST",
           body: formData,
@@ -74,13 +74,10 @@ function Dashboard() {
   };
 
   const handleFetchImage = async () => {
-    if (!imageId) {
-      alert("Masukkan ID gambar!");
-      return;
-    }
-
     try {
-      const response = await fetch(`${backendUrl}/image`);
+      const response = await fetch(
+        `${backendUrl}/organizational-structure/get-image-organizational-structure`
+      );
 
       if (!response.ok) {
         alert("Gagal mengambil gambar!");

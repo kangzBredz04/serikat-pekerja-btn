@@ -42,7 +42,7 @@ function App() {
         loading,
         gallery,
         users,
-        organizationalImage
+        organizationalImage,
       }}
     >
       <Header />
