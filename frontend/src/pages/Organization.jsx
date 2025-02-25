@@ -5,7 +5,8 @@ const Organization = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [fetchedImage, setFetchedImage] = useState(null);
 
-  const backendUrl = "http://localhost:3000/api";
+  // const backendUrl = "http://localhost:3000/api";
+  const backendUrl = "https://serikat-pekerja-btn-api.vercel.app/api";
 
   const handleFetchImage = async () => {
     try {
