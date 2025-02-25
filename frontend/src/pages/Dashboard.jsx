@@ -17,8 +17,12 @@ function Dashboard() {
   const [uploadedImage, setUploadedImage] = useState(null);
   const [fetchedImage, setFetchedImage] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [previewImage, setPreviewImage] = useState(null);
+  const [isImageSelected, setIsImageSelected] = useState(false);
+  const [imageLoading, setImageLoading] = useState(true);
 
-  const backendUrl = "http://localhost:3000/api";
+  // const backendUrl = "http://localhost:3000/api";
+  const backendUrl = "https://serikat-pekerja-btn-api.vercel.app/api";
 
   useEffect(() => {
     setStats({
@@ -38,7 +42,12 @@ function Dashboard() {
   }, [navigate]);
 
   const handleImageChange = (event) => {
-    setImage(event.target.files[0]);
+    const file = event.target.files[0];
+    if (file) {
+      setImage(file);
+      setPreviewImage(URL.createObjectURL(file));
+      setIsImageSelected(true);
+    }
   };
 
   const handleUpload = async () => {
@@ -62,8 +71,7 @@ function Dashboard() {
         alert("Gambar berhasil diunggah!");
         window.location.reload();
       } else alert("Upload gagal!");
-    } catch (error) {
-      console.error("Upload gagal", error);
+    } catch {
       alert("Gagal mengunggah gambar!");
     } finally {
       setLoading(false);
@@ -83,9 +91,10 @@ function Dashboard() {
 
       const imageUrl = URL.createObjectURL(await response.blob());
       setFetchedImage(imageUrl);
-    } catch (error) {
-      console.error("Gagal mengambil gambar", error);
+    } catch {
       alert("Gagal mengambil gambar!");
+    } finally {
+      setImageLoading(false);
     }
   };
 
@@ -155,35 +164,64 @@ function Dashboard() {
       <div className="mt-8 p-6 bg-white rounded-lg shadow-lg text-center border border-gray-200">
         <h2 className="text-xl font-bold mb-4">Struktur Organisasi</h2>
         <div className="flex flex-col items-center gap-4">
-          {!fetchedImage ? (
-            <div className="w-96 h-56 bg-gray-300 animate-pulse rounded-md" />
-          ) : (
+          {/* Skeleton Loader */}
+          {imageLoading && (
+            <div className="w-full h-48 bg-gray-300 animate-pulse rounded-md" />
+          )}
+
+          {/* Tampilan gambar yang sudah ada */}
+          {fetchedImage && !isImageSelected && (
             <img
               src={fetchedImage}
-              alt="Fetched"
-              className="w-96 h-auto rounded-md border border-gray-300"
+              alt="Organizational Structure"
+              className="w-full h-auto rounded-md border border-gray-300"
             />
           )}
+
+          {/* Pratinjau gambar yang dipilih */}
+          {previewImage && (
+            <img
+              src={previewImage}
+              alt="Preview"
+              className="w-full h-auto rounded-md border border-gray-500"
+            />
+          )}
+
           <div className="flex items-center gap-3">
-            <button
-              className="px-4 py-2 bg-gray-300 text-gray-700 rounded cursor-pointer"
-              onClick={() => document.getElementById("fileInput").click()}
-            >
-              Pilih Gambar
-            </button>
+            {/* Tombol Pilih Gambar */}
+            {!isImageSelected && (
+              <button
+                className="px-4 py-2 bg-gray-300 text-gray-700 rounded cursor-pointer"
+                onClick={() => document.getElementById("fileInput").click()}
+              >
+                Ganti Gambar
+              </button>
+            )}
             <input
               id="fileInput"
               type="file"
               onChange={handleImageChange}
               className="hidden"
             />
-            <button
-              onClick={handleUpload}
-              className="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer"
-              disabled={loading}
-            >
-              {loading ? "Uploading..." : "Upload"}
-            </button>
+
+            {/* Tombol Batal & Lanjut Ganti */}
+            {isImageSelected && (
+              <>
+                <button
+                  className="px-4 py-2 bg-red-500 text-white rounded cursor-pointer"
+                  onClick={() => window.location.reload()}
+                >
+                  Batal Ganti
+                </button>
+                <button
+                  onClick={handleUpload}
+                  className="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer"
+                  disabled={loading}
+                >
+                  {loading ? "Uploading..." : "Lanjut Ganti"}
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>
