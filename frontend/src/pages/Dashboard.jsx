@@ -5,7 +5,7 @@ import { AllContext } from "../App";
 
 function Dashboard() {
   const navigate = useNavigate();
-  const { news, gallery, users, organizationalImage } = useContext(AllContext);
+  const { news, gallery, users } = useContext(AllContext);
 
   const [stats, setStats] = useState({
     newsCount: 0,
@@ -15,8 +15,8 @@ function Dashboard() {
 
   const [image, setImage] = useState(null);
   const [uploadedImage, setUploadedImage] = useState(null);
-  const [imageId, setImageId] = useState("");
   const [fetchedImage, setFetchedImage] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const backendUrl = "http://localhost:3000/api";
 
@@ -47,29 +47,26 @@ function Dashboard() {
       return;
     }
 
+    setLoading(true);
     const formData = new FormData();
     formData.append("image", image);
 
     try {
       const response = await fetch(
         `${backendUrl}/organizational-structure/image`,
-        {
-          method: "POST",
-          body: formData,
-        }
+        { method: "POST", body: formData }
       );
-
       const result = await response.json();
-
       if (result.success) {
         setUploadedImage(result.data);
         alert("Gambar berhasil diunggah!");
-      } else {
-        alert("Upload gagal!");
-      }
+        window.location.reload();
+      } else alert("Upload gagal!");
     } catch (error) {
       console.error("Upload gagal", error);
       alert("Gagal mengunggah gambar!");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -92,6 +89,9 @@ function Dashboard() {
     }
   };
 
+  useEffect(() => {
+    handleFetchImage();
+  }, []);
   return (
     <div className="min-h-[80vh] p-6 mx-auto max-w-6xl">
       <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
@@ -153,44 +153,37 @@ function Dashboard() {
       {/* Struktur Organisasi */}
       <div className="mt-8 p-6 bg-white rounded-lg shadow-lg text-center border border-gray-200">
         <h2 className="text-xl font-bold mb-4">Struktur Organisasi</h2>
-        <div style={{ textAlign: "center", padding: "20px" }}>
-          <h2>Upload Gambar ke Database</h2>
-          <input type="file" onChange={handleImageChange} />
-          <button onClick={handleUpload} style={{ marginLeft: "10px" }}>
-            Upload
-          </button>
-
-          {uploadedImage && (
-            <div style={{ marginTop: "20px" }}>
-              <h3>Gambar Terupload</h3>
-              <p>ID: {uploadedImage.id}</p>
-              <p>Nama File: {uploadedImage.filename}</p>
-            </div>
+        <div className="flex flex-col items-center gap-4">
+          {!fetchedImage ? (
+            <div className="w-96 h-56 bg-gray-300 animate-pulse rounded-md" />
+          ) : (
+            <img
+              src={fetchedImage}
+              alt="Fetched"
+              className="w-96 h-auto rounded-md border border-gray-300"
+            />
           )}
-
-          <hr />
-
-          <h2>Ambil Gambar dari Database</h2>
-          <input
-            type="text"
-            placeholder="Masukkan ID gambar"
-            value={imageId}
-            onChange={(e) => setImageId(e.target.value)}
-          />
-          <button onClick={handleFetchImage} style={{ marginLeft: "10px" }}>
-            Ambil Gambar
-          </button>
-
-          {fetchedImage && (
-            <div style={{ marginTop: "20px" }}>
-              <h3>Gambar yang Diambil</h3>
-              <img
-                src={fetchedImage}
-                alt="Fetched"
-                style={{ width: "300px", height: "auto" }}
-              />
-            </div>
-          )}
+          <div className="flex items-center gap-3">
+            <button
+              className="px-4 py-2 bg-gray-300 text-gray-700 rounded cursor-pointer"
+              onClick={() => document.getElementById("fileInput").click()}
+            >
+              Pilih Gambar
+            </button>
+            <input
+              id="fileInput"
+              type="file"
+              onChange={handleImageChange}
+              className="hidden"
+            />
+            <button
+              onClick={handleUpload}
+              className="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer"
+              disabled={loading}
+            >
+              {loading ? "Uploading..." : "Upload"}
+            </button>
+          </div>
         </div>
       </div>
     </div>
