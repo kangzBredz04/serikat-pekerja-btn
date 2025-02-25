@@ -4,6 +4,7 @@ import { IoClose } from "react-icons/io5";
 const Organization = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [fetchedImage, setFetchedImage] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   // const backendUrl = "http://localhost:3000/api";
   const backendUrl = "https://serikat-pekerja-btn-api.vercel.app/api";
@@ -13,12 +14,12 @@ const Organization = () => {
       const response = await fetch(
         `${backendUrl}/organizational-structure/get-image-organizational-structure`
       );
-
       const imageUrl = URL.createObjectURL(await response.blob());
       setFetchedImage(imageUrl);
     } catch (error) {
       console.error("Gagal mengambil gambar", error);
-      // alert("Gagal mengambil gambar!");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -76,12 +77,16 @@ const Organization = () => {
           Struktur Organisasi SP-BTN
         </h2>
         <div className="mt-6 bg-white p-6 text-center">
-          <img
-            src={fetchedImage}
-            alt="Struktur Organisasi SP-BTN"
-            className="mx-auto w-full max-w-md md:max-w-lg lg:max-w-2xl cursor-pointer"
-            onClick={() => setIsOpen(true)}
-          />
+          {loading ? (
+            <div className="w-full max-w-md md:max-w-lg lg:max-w-2xl h-64 bg-gray-200 animate-pulse mx-auto" />
+          ) : (
+            <img
+              src={fetchedImage}
+              alt="Struktur Organisasi SP-BTN"
+              className="mx-auto w-full max-w-md md:max-w-lg lg:max-w-2xl cursor-pointer"
+              onClick={() => setIsOpen(true)}
+            />
+          )}
         </div>
       </div>
 
