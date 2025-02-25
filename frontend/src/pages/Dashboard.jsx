@@ -1,11 +1,11 @@
 import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaNewspaper, FaUsers, FaImages, FaUpload } from "react-icons/fa";
+import { FaNewspaper, FaUsers, FaImages } from "react-icons/fa";
 import { AllContext } from "../App";
 
 function Dashboard() {
   const navigate = useNavigate();
-  const { news, gallery, users } = useContext(AllContext);
+  const { news, gallery, users, organizationalImage } = useContext(AllContext);
 
   const [stats, setStats] = useState({
     newsCount: 0,
@@ -13,8 +13,12 @@ function Dashboard() {
     galleryCount: 0,
   });
 
-  const [orgImage, setOrgImage] = useState(null);
+  const [image, setImage] = useState(null);
   const [uploadedImage, setUploadedImage] = useState(null);
+  const [imageId, setImageId] = useState("");
+  const [fetchedImage, setFetchedImage] = useState(null);
+
+  const backendUrl = "http://localhost:3000";
 
   useEffect(() => {
     setStats({
@@ -31,28 +35,29 @@ function Dashboard() {
     if (!adminId || !fullName) {
       navigate("/unauthorized");
     }
-  }, [navigate, orgImage]);
-
-  const backendUrl = "http://localhost:3000";
+  }, [navigate]);
 
   const handleImageChange = (event) => {
-    setOrgImage(event.target.files[0]);
+    setImage(event.target.files[0]);
   };
 
   const handleUpload = async () => {
-    if (!orgImage) {
+    if (!image) {
       alert("Pilih gambar terlebih dahulu!");
       return;
     }
 
     const formData = new FormData();
-    formData.append("image", orgImage);
+    formData.append("image", image);
 
     try {
-      const response = await fetch(`${backendUrl}/upload`, {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        `${backendUrl}/api/organizational-structure/image`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       const result = await response.json();
 
@@ -68,9 +73,26 @@ function Dashboard() {
     }
   };
 
-  const handleRemoveImage = () => {
-    setOrgImage("");
-    localStorage.removeItem("orgImage");
+  const handleFetchImage = async () => {
+    if (!imageId) {
+      alert("Masukkan ID gambar!");
+      return;
+    }
+
+    try {
+      const response = await fetch(`${backendUrl}/image`);
+
+      if (!response.ok) {
+        alert("Gagal mengambil gambar!");
+        return;
+      }
+
+      const imageUrl = URL.createObjectURL(await response.blob());
+      setFetchedImage(imageUrl);
+    } catch (error) {
+      console.error("Gagal mengambil gambar", error);
+      alert("Gagal mengambil gambar!");
+    }
   };
 
   return (
@@ -134,42 +156,45 @@ function Dashboard() {
       {/* Struktur Organisasi */}
       <div className="mt-8 p-6 bg-white rounded-lg shadow-lg text-center border border-gray-200">
         <h2 className="text-xl font-bold mb-4">Struktur Organisasi</h2>
-        {orgImage ? (
-          <div>
-            <img
-              src={orgImage}
-              alt="Struktur Organisasi"
-              className="mx-auto max-w-full h-auto rounded-lg shadow"
-            />
-            <button
-              onClick={handleRemoveImage}
-              className="mt-4 px-4 py-2 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-700"
-            >
-              Hapus Gambar
-            </button>
-          </div>
-        ) : (
-          <div className="border-2 border-dashed border-gray-300 p-6 rounded-lg flex flex-col items-center justify-center">
-            <FaUpload className="text-gray-400 text-6xl mb-4" />
-            <p className="text-gray-600 mb-2">Upload Struktur Organisasi</p>
-            <label className="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700">
-              Pilih Gambar
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="hidden"
-                multiple={false}
+        <div style={{ textAlign: "center", padding: "20px" }}>
+          <h2>Upload Gambar ke Database</h2>
+          <input type="file" onChange={handleImageChange} />
+          <button onClick={handleUpload} style={{ marginLeft: "10px" }}>
+            Upload
+          </button>
+
+          {uploadedImage && (
+            <div style={{ marginTop: "20px" }}>
+              <h3>Gambar Terupload</h3>
+              <p>ID: {uploadedImage.id}</p>
+              <p>Nama File: {uploadedImage.filename}</p>
+            </div>
+          )}
+
+          <hr />
+
+          <h2>Ambil Gambar dari Database</h2>
+          <input
+            type="text"
+            placeholder="Masukkan ID gambar"
+            value={imageId}
+            onChange={(e) => setImageId(e.target.value)}
+          />
+          <button onClick={handleFetchImage} style={{ marginLeft: "10px" }}>
+            Ambil Gambar
+          </button>
+
+          {fetchedImage && (
+            <div style={{ marginTop: "20px" }}>
+              <h3>Gambar yang Diambil</h3>
+              <img
+                src={fetchedImage}
+                alt="Fetched"
+                style={{ width: "300px", height: "auto" }}
               />
-            </label>
-            <button
-              // onClick={handleUploadImage}
-              className="mt-4 px-4 py-2 bg-green-500 text-white rounded-lg shadow-md hover:bg-green-700"
-            >
-              Upload Gambar
-            </button>
-          </div>
-        )}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

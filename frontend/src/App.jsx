@@ -11,13 +11,21 @@ function App() {
   const [news, setNews] = useState([]);
   const [newsDetail, setNewsDetail] = useState([]);
   const [gallery, setGallery] = useState([]);
+  const [organizationalImage, setOrganizationalImage] = useState(null);
   const [users, setUsers] = useState([]);
+
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     api.get("/new/get-all").then((response) => setNews(response));
     api.get("/gallery/get-all").then((response) => setGallery(response));
     api.get("/auth/get-all").then((response) => setUsers(response));
+    api
+      .get("/organizational-structure/get-image-organizational-structure")
+      .then(async (response) => {
+        const imageUrl = URL.createObjectURL(await response.blob());
+        setOrganizationalImage(imageUrl);
+      });
     api
       .get(`/new/get-by-id/${localStorage.getItem("id_news")}`)
       .then((response) => {
@@ -34,6 +42,7 @@ function App() {
         loading,
         gallery,
         users,
+        organizationalImage
       }}
     >
       <Header />
