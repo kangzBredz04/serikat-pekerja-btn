@@ -13,16 +13,11 @@ const Organization = () => {
         `${backendUrl}/organizational-structure/get-image-organizational-structure`
       );
 
-      if (!response.ok) {
-        alert("Gagal mengambil gambar!");
-        return;
-      }
-
       const imageUrl = URL.createObjectURL(await response.blob());
       setFetchedImage(imageUrl);
     } catch (error) {
       console.error("Gagal mengambil gambar", error);
-      alert("Gagal mengambil gambar!");
+      // alert("Gagal mengambil gambar!");
     }
   };
 
