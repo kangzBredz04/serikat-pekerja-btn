@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
+import { FaEdit, FaTrash } from "react-icons/fa";
 import { AllContext } from "../App";
 import { api } from "../utils";
 
@@ -8,15 +8,13 @@ export default function NewsCrud() {
   const [search, setSearch] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedNews, setSelectedNews] = useState(null);
-  const [viewOnly, setViewOnly] = useState(false);
   const [perPage, setPerPage] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
   const defaultImage =
     "https://signfix.com.au/wp-content/uploads/2017/09/placeholder-600x400.png";
 
-  const handleOpenModal = (newsItem = null, viewOnly = false) => {
+  const handleOpenModal = (newsItem = null) => {
     setSelectedNews(newsItem);
-    setViewOnly(viewOnly);
     setModalOpen(true);
   };
 
@@ -32,7 +30,7 @@ export default function NewsCrud() {
   );
 
   return (
-    <div className="p-4 max-w-6xl mx-auto">
+    <div className="p-4">
       <div className="flex justify-between items-center mb-4">
         <button
           onClick={() => handleOpenModal()}
@@ -45,45 +43,43 @@ export default function NewsCrud() {
           placeholder="Cari berita..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="border p-2 rounded"
+          className="border p-2 rounded w-1/3"
         />
       </div>
 
-      <table className="w-full border-collapse border border-gray-200">
-        <thead>
-          <tr className="bg-gray-100">
-            <th className="border p-2">No</th>
-            <th className="border p-2">Title</th>
-            <th className="border p-2">Image</th>
-            <th className="border p-2">Content</th>
-            <th className="border p-2">Aksi</th>
+      <table className="w-full text-left border border-gray-400">
+        <thead className="text-center">
+          <tr className="bg-gray-100 border-b border-gray-400">
+            <th className="p-2 w-1 border-r border-gray-400">No</th>
+            <th className="p-2 w-1/4 border-r border-gray-400">Title</th>
+            <th className="p-2 w-1/6 border-r border-gray-400">Image</th>
+            <th className="p-2 w-1/3 border-r border-gray-400">Content</th>
+            <th className="p-2 w-20 text-center border-gray-400">Aksi</th>
           </tr>
         </thead>
         <tbody>
           {paginatedNews.length > 0 ? (
             paginatedNews.map((item, index) => (
-              <tr key={item.id} className="border">
-                <td className="border p-2 text-center">{index + 1}</td>
-                <td className="border p-2 break-words w-1/4">{item.title}</td>
-                <td className="border p-2 flex justify-center">
+              <tr key={item.id} className="border-b border-gray-400">
+                <td className="p-2 text-center border-r border-gray-400">
+                  {(currentPage - 1) * perPage + index + 1}
+                </td>
+                <td className="p-2 border-r border-gray-400 break-words">
+                  {item.title}
+                </td>
+                <td className="flex justify-center border-r border-gray-400">
                   <img
                     src={item.image_url || defaultImage}
                     alt={item.title}
-                    className="w-32"
+                    className="w-40 rounded"
                   />
                 </td>
-                <td className="border p-2">
-                  {item.content.length > 150
-                    ? item.content.substring(0, 150) + "..."
+                <td className="p-2 border-r border-gray-400">
+                  {item.content.length > 100
+                    ? item.content.substring(0, 100) + "..."
                     : item.content}
                 </td>
-                <td className="border p-2 flex justify-center gap-2">
-                  <button
-                    onClick={() => handleOpenModal(item, true)}
-                    className="text-blue-500"
-                  >
-                    <FaEye />
-                  </button>
+                <td className="p-2 flex justify-center gap-2 border-gray-400">
                   <button
                     onClick={() => handleOpenModal(item)}
                     className="text-yellow-500"
@@ -99,13 +95,8 @@ export default function NewsCrud() {
                       ) {
                         api
                           .delete(`/new/delete-by-id/${item.id}`)
-                          .then(async (res) => {
-                            alert(res.message);
-                          })
-                          .catch((e) => {
-                            console.log(e);
-                          });
-                        // window.location.href = "/admin-news";
+                          .then(async (res) => alert(res.message))
+                          .catch((e) => console.log(e));
                       }
                     }}
                     className="text-red-500"
@@ -117,7 +108,7 @@ export default function NewsCrud() {
             ))
           ) : (
             <tr>
-              <td colSpan="6" className="text-center p-4">
+              <td colSpan="5" className="text-center p-4">
                 Data tidak ditemukan
               </td>
             </tr>
@@ -142,7 +133,9 @@ export default function NewsCrud() {
               <button
                 key={i}
                 onClick={() => setCurrentPage(i + 1)}
-                className="mx-1 px-3 py-1 border rounded"
+                className={`mx-1 px-3 py-1 border rounded ${
+                  currentPage === i + 1 ? "bg-blue-500 text-white" : ""
+                }`}
               >
                 {i + 1}
               </button>
@@ -155,37 +148,28 @@ export default function NewsCrud() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-6 rounded w-1/2">
             <h2 className="text-lg font-bold mb-4">
-              {viewOnly
-                ? "Lihat Berita"
-                : selectedNews
-                ? "Edit Berita"
-                : "Tambah Berita"}
+              {selectedNews ? "Edit Berita" : "Tambah Berita"}
             </h2>
             <input
               type="text"
               placeholder="Title"
               value={selectedNews?.title || ""}
-              disabled={viewOnly}
               className="border p-2 w-full mb-2"
             />
             <input
               type="text"
               placeholder="Image URL"
               value={selectedNews?.image_url || ""}
-              disabled={viewOnly}
               className="border p-2 w-full mb-2"
             />
             <textarea
               placeholder="Content"
               value={selectedNews?.content || ""}
-              disabled={viewOnly}
               className="border p-2 w-full mb-2"
             ></textarea>
-            {!viewOnly && (
-              <button className="bg-blue-500 text-white px-4 py-2 rounded">
-                Simpan
-              </button>
-            )}
+            <button className="bg-blue-500 text-white px-4 py-2 rounded">
+              Simpan
+            </button>
             <button
               onClick={() => setModalOpen(false)}
               className="bg-gray-500 text-white px-4 py-2 rounded ml-2"
