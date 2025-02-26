@@ -13,6 +13,7 @@ import Dashboard from "./pages/Dashboard.jsx";
 import NotFoundPage from "./pages/ErrorPage.jsx";
 import NewsCrud from "./pages/NewsCrud.jsx";
 import UsersCrud from "./pages/UsersCrud.jsx";
+import GalleryCrud from "./pages/GalleryCrud.jsx";
 
 const router = createBrowserRouter([
   {
@@ -55,6 +56,10 @@ const router = createBrowserRouter([
       {
         path: "/admin-users",
         element: <UsersCrud />,
+      },
+      {
+        path: "/admin-gallery",
+        element: <GalleryCrud />,
       },
     ],
   },
