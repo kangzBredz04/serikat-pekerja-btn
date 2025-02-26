@@ -50,7 +50,7 @@ export default function NewsCrud() {
       <table className="w-full text-left border border-gray-400">
         <thead className="text-center">
           <tr className="bg-gray-100 border-b border-gray-400">
-            <th className="p-2 w-1 border-r border-gray-400">No</th>
+            <th className="p-2 w- border-r border-gray-400">No</th>
             <th className="p-2 w-1/4 border-r border-gray-400">Title</th>
             <th className="p-2 w-1/6 border-r border-gray-400">Image</th>
             <th className="p-2 w-1/3 border-r border-gray-400">Content</th>
