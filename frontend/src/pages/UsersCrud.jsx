@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
-import { AllContext } from "../context/AllContext";
 import { FaEye, FaEyeSlash, FaTrash, FaSearch } from "react-icons/fa";
 import { MdClose } from "react-icons/md";
+import { AllContext } from "../App";
 
 function UsersCrud() {
   const { users } = useContext(AllContext);
@@ -15,7 +15,7 @@ function UsersCrud() {
   const filteredUsers = users.filter(
     (user) =>
       user.username.toLowerCase().includes(search.toLowerCase()) ||
-      user.fullname.toLowerCase().includes(search.toLowerCase())
+      user.full_name.toLowerCase().includes(search.toLowerCase())
   );
 
   // Pagination
@@ -27,26 +27,17 @@ function UsersCrud() {
 
   return (
     <div className="p-4">
-      <div className="flex justify-between mb-4">
-        <div className="relative">
+      <div className="flex justify-between items-center mb-4">
+        <div className="relative w-full max-w-md">
           <input
             type="text"
             placeholder="Search by username or full name..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="border p-2 rounded-lg"
+            className="border p-2 rounded-lg w-full pl-10"
           />
-          <FaSearch className="absolute right-2 top-3 text-gray-500" />
+          <FaSearch className="absolute left-3 top-3 text-gray-500" />
         </div>
-        <select
-          value={itemsPerPage}
-          onChange={(e) => setItemsPerPage(Number(e.target.value))}
-          className="border p-2 rounded-lg"
-        >
-          <option value={5}>5</option>
-          <option value={10}>10</option>
-          <option value={filteredUsers.length}>All</option>
-        </select>
       </div>
 
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -79,7 +70,7 @@ function UsersCrud() {
                     {showPassword[user.id] ? <FaEyeSlash /> : <FaEye />}
                   </button>
                 </td>
-                <td className="px-4 py-2">{user.fullname}</td>
+                <td className="px-4 py-2">{user.full_name}</td>
                 <td className="px-4 py-2 flex gap-2">
                   <button
                     className="bg-blue-500 text-white px-3 py-1 rounded"
@@ -87,7 +78,7 @@ function UsersCrud() {
                   >
                     Lihat
                   </button>
-                  {user.id_admin === 1 && (
+                  {localStorage.getItem("id_admin") == 1 && (
                     <button className="bg-red-500 text-white px-3 py-1 rounded">
                       <FaTrash />
                     </button>
@@ -99,13 +90,20 @@ function UsersCrud() {
         </table>
       </div>
 
-      {/* Pagination */}
+      {/* Pagination & Items per Page */}
       <div className="flex justify-between items-center mt-4">
-        <span>
-          Showing {indexOfFirstItem + 1} to{" "}
-          {Math.min(indexOfLastItem, filteredUsers.length)} of{" "}
-          {filteredUsers.length} users
-        </span>
+        <div>
+          <label className="mr-2">Rows per page:</label>
+          <select
+            value={itemsPerPage}
+            onChange={(e) => setItemsPerPage(Number(e.target.value))}
+            className="border p-2 rounded-lg"
+          >
+            <option value={5}>5</option>
+            <option value={10}>10</option>
+            <option value={filteredUsers.length}>All</option>
+          </select>
+        </div>
         <div className="flex gap-2">
           {[...Array(totalPages)].map((_, i) => (
             <button
@@ -138,7 +136,7 @@ function UsersCrud() {
               <strong>Password:</strong> {selectedUser.password}
             </p>
             <p>
-              <strong>Full Name:</strong> {selectedUser.fullname}
+              <strong>Full Name:</strong> {selectedUser.full_name}
             </p>
           </div>
         </div>
