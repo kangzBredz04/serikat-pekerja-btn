@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { FaEye, FaEyeSlash, FaTrash, FaSearch } from "react-icons/fa";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { MdClose } from "react-icons/md";
 import { AllContext } from "../App";
 
@@ -11,49 +11,46 @@ function UsersCrud() {
   const [itemsPerPage, setItemsPerPage] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Filter data berdasarkan pencarian
   const filteredUsers = users.filter(
     (user) =>
       user.username.toLowerCase().includes(search.toLowerCase()) ||
       user.full_name.toLowerCase().includes(search.toLowerCase())
   );
 
-  // Pagination
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentUsers = filteredUsers.slice(indexOfFirstItem, indexOfLastItem);
-
   const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
 
   return (
     <div className="p-4">
       <div className="flex justify-between items-center mb-4">
-        <div className="relative w-full max-w-md">
-          <input
-            type="text"
-            placeholder="Search by username or full name..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="border p-2 rounded-lg w-full pl-10"
-          />
-          <FaSearch className="absolute left-3 top-3 text-gray-500" />
-        </div>
+        <input
+          type="text"
+          placeholder="Search by username or full name..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="border p-2 rounded-lg w-full max-w-md pl-10"
+        />
       </div>
 
-      <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-        <table className="w-full text-sm text-left border border-gray-300">
-          <thead className="bg-gray-100">
+      <div className="relative overflow-x-auto">
+        <table className="w-full text-sm text-left border border-gray-300 rounded-lg">
+          <thead className="bg-blue-200 text-gray-700">
             <tr>
-              <th className="px-4 py-2">No</th>
-              <th className="px-4 py-2">Username</th>
-              <th className="px-4 py-2">Password</th>
-              <th className="px-4 py-2">Full Name</th>
-              <th className="px-4 py-2">Action</th>
+              <th className="px-4 py-2 border border-gray-300">No</th>
+              <th className="px-4 py-2 border border-gray-300">Username</th>
+              <th className="px-4 py-2 border border-gray-300">Password</th>
+              <th className="px-4 py-2 border border-gray-300">Full Name</th>
+              <th className="px-4 py-2 border border-gray-300">Action</th>
             </tr>
           </thead>
           <tbody>
             {currentUsers.map((user, index) => (
-              <tr key={user.id} className="border-b">
+              <tr
+                key={user.id}
+                className="border-b border-gray-300 hover:bg-gray-100"
+              >
                 <td className="px-4 py-2">{indexOfFirstItem + index + 1}</td>
                 <td className="px-4 py-2">{user.username}</td>
                 <td className="px-4 py-2 flex items-center">
@@ -76,11 +73,11 @@ function UsersCrud() {
                     className="bg-blue-500 text-white px-3 py-1 rounded"
                     onClick={() => setSelectedUser(user)}
                   >
-                    Lihat
+                    Lihat Detail
                   </button>
                   {localStorage.getItem("id_admin") == 1 && (
                     <button className="bg-red-500 text-white px-3 py-1 rounded">
-                      <FaTrash />
+                      Hapus Pengguna
                     </button>
                   )}
                 </td>
@@ -90,7 +87,6 @@ function UsersCrud() {
         </table>
       </div>
 
-      {/* Pagination & Items per Page */}
       <div className="flex justify-between items-center mt-4">
         <div>
           <label className="mr-2">Rows per page:</label>
@@ -119,11 +115,10 @@ function UsersCrud() {
         </div>
       </div>
 
-      {/* Modal */}
       {selectedUser && (
-        <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg w-96">
-            <div className="flex justify-between">
+        <div className="fixed inset-0 bg-gray-900  backdrop-blur-md flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg w-96 shadow-lg">
+            <div className="flex justify-between mb-4">
               <h2 className="text-xl font-bold">User Details</h2>
               <button onClick={() => setSelectedUser(null)}>
                 <MdClose className="text-xl" />
