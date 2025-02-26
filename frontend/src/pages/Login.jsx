@@ -112,14 +112,6 @@ function Login() {
               {popup.success ? "Berhasil!" : "Gagal!"}
             </h2>
             <p className="text-gray-700 mt-2">{popup.message}</p>
-
-            <button
-              onClick={() => setPopup({ show: false })}
-              className="mt-6 px-6 py-2 rounded-full font-semibold shadow-md transition duration-300 ease-in-out
-        ${popup.success ? 'bg-green-600 hover:bg-green-800' : 'bg-red-600 hover:bg-red-800'}"
-            >
-              OK
-            </button>
           </div>
         </div>
       )}
