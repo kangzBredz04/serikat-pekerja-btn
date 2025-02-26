@@ -12,6 +12,7 @@ import Login from "./pages/Login.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import NotFoundPage from "./pages/ErrorPage.jsx";
 import NewsCrud from "./pages/NewsCrud.jsx";
+import UsersCrud from "./pages/UsersCrud.jsx";
 
 const router = createBrowserRouter([
   {
@@ -50,6 +51,10 @@ const router = createBrowserRouter([
       {
         path: "/admin-news",
         element: <NewsCrud />,
+      },
+      {
+        path: "/admin-users",
+        element: <UsersCrud />,
       },
     ],
   },
