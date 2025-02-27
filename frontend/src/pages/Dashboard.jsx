@@ -80,12 +80,11 @@ function Dashboard() {
 
   const handleFetchImage = async () => {
     try {
-      const response = await fetch(
+      await fetch(
         `${backendUrl}/organizational-structure/get-image-organizational-structure`
       )
         .then((response) => response.json())
         .then((res) => {
-          // const imageUrl = URL.createObjectURL(res.data.image.blob());
           setFetchedImage(res.data.image);
           console.log(res.data);
         });
