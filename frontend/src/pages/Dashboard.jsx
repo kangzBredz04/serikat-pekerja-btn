@@ -44,6 +44,8 @@ function Dashboard() {
     }
   }, [fetchedImage, imageOrganizational]);
 
+  console.log(fetchedImage);
+
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
