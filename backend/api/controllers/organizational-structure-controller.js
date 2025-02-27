@@ -35,10 +35,36 @@ export const uploadImage = async (req, res) => {
     }
 };
 
+// TANPA DESKRIPSI
+// export const getImage = async (req, res) => {
+//     try {
+//         // const { id } = req.params;
+//         const query = `SELECT * FROM organizational_structure WHERE id = 1`;
+//         const result = await pool.query(query);
 
+//         if (result.rows.length === 0) {
+//             return res.status(404).json({ success: false, message: "Gambar tidak ditemukan!" });
+//         }
+
+//         const image = result.rows[0];
+//         const imgBuffer = Buffer.from(image.image_base64, "base64");
+
+//         res.writeHead(200, {
+//             "Content-Type": image.mimetype,
+//             "Content-Length": imgBuffer.length,
+//         });
+
+//         res.end(imgBuffer);
+
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ success: false, message: "Gagal mengambil gambar!" });
+//     }
+// }
+
+// DENGAN DESKRIPSI
 export const getImage = async (req, res) => {
     try {
-        // const { id } = req.params;
         const query = `SELECT * FROM organizational_structure WHERE id = 1`;
         const result = await pool.query(query);
 
@@ -47,16 +73,23 @@ export const getImage = async (req, res) => {
         }
 
         const image = result.rows[0];
-        const imgBuffer = Buffer.from(image.image_base64, "base64");
 
-        res.writeHead(200, {
-            "Content-Type": image.mimetype,
-            "Content-Length": imgBuffer.length,
+        // Konversi gambar ke Base64
+        const imageBase64 = image.image_base64;
+
+        res.status(200).json({
+            success: true,
+            message: "Gambar berhasil diambil",
+            data: {
+                id: image.id,
+                description: image.description, // Pastikan ada kolom 'description' di tabel
+                mimetype: image.mimetype,
+                image: `data:${image.mimetype};base64,${imageBase64}`
+            }
         });
 
-        res.end(imgBuffer);
     } catch (error) {
         console.error(error);
         res.status(500).json({ success: false, message: "Gagal mengambil gambar!" });
     }
-}
+};
