@@ -14,14 +14,11 @@ function Dashboard() {
   });
 
   const [image, setImage] = useState(null);
-  const [uploadedImage, setUploadedImage] = useState(null);
   const [fetchedImage, setFetchedImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [previewImage, setPreviewImage] = useState(null);
   const [isImageSelected, setIsImageSelected] = useState(false);
   const [imageLoading, setImageLoading] = useState(true);
-
-  const backendUrl = "https://serikat-pekerja-btn-api.vercel.app/api";
 
   useEffect(() => {
     setStats({
@@ -61,19 +58,16 @@ function Dashboard() {
       alert("Pilih gambar terlebih dahulu!");
       return;
     }
-
     setLoading(true);
     const formData = new FormData();
     formData.append("image", image);
-
     try {
       const response = await fetch(
-        `${backendUrl}/organizational-structure/image`,
+        "https://serikat-pekerja-btn-api.vercel.app/api/organizational-structure/image",
         { method: "POST", body: formData }
       );
       const result = await response.json();
       if (result.success) {
-        setUploadedImage(result.data);
         alert("Gambar berhasil diunggah!");
         window.location.reload();
       } else alert("Upload gagal!");
