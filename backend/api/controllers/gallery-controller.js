@@ -40,14 +40,36 @@ export const getImages = async (_req, res) => {
 
 export const addImage = async (req, res) => {
     try {
-        const { originalname, mimetype, buffer } = req.file;
-        const { description } = req.body;
+        // Cek apakah file ada
+        console.log("File:", req.file);
+        console.log("Body:", req.body);
+
+
+        // if (!req.file) {
+        //     return res.status(400).json({
+        //         success: false,
+        //         message: "File gambar tidak ditemukan!",
+        //     });
+        // }
+
+        const { originalname, mimetype, buffer } = req.file; // File gambar
+        const { description } = req.body; // Deskripsi gambar
+
+        // Konversi buffer ke base64
         const base64Image = buffer.toString("base64");
 
-        const query = `INSERT INTO images (filename, mimetype, image_base64, description) VALUES ($1, $2, $3, $4) RETURNING *`;
+        // Query untuk menyimpan ke database
+        const query = `
+      INSERT INTO images (filename, mimetype, image_base64, description)
+      VALUES ($1, $2, $3, $4)
+      RETURNING *
+    `;
         const values = [originalname, mimetype, base64Image, description];
 
+        // Eksekusi query
         const result = await pool.query(query, values);
+
+        // Response sukses
         res.json({
             success: true,
             message: "Gambar berhasil diunggah!",
@@ -55,6 +77,10 @@ export const addImage = async (req, res) => {
         });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ success: false, message: "Upload gagal!", error: error.message });
+        res.status(500).json({
+            success: false,
+            message: "Upload gagal!",
+            error: error.message,
+        });
     }
 }
