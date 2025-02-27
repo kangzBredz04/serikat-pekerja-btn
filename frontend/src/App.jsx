@@ -12,6 +12,7 @@ function App() {
   const [newsDetail, setNewsDetail] = useState([]);
   const [gallery, setGallery] = useState([]);
   const [users, setUsers] = useState([]);
+  const [imageOrganizational, setImageOrganizational] = useState(null);
 
   const [loading, setLoading] = useState(true);
 
@@ -25,6 +26,9 @@ function App() {
         setNewsDetail(response);
         setLoading(false);
       });
+    api
+      .get("/organizational-structure/get-image-organizational-structure")
+      .then((res) => setImageOrganizational(res.data.image));
   }, []);
 
   return (
@@ -35,6 +39,7 @@ function App() {
         loading,
         gallery,
         users,
+        imageOrganizational,
       }}
     >
       <Header />
