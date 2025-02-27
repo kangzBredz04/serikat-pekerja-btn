@@ -6,6 +6,8 @@ export const upload = multer({ storage });
 
 export const uploadImage = async (req, res) => {
     try {
+        console.log("File:", req.file);
+        console.log("Body:", req.body);
         const { originalname, mimetype, buffer } = req.file;
         const base64Image = buffer.toString("base64");
         const id = 1;
