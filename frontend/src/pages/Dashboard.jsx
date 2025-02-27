@@ -87,7 +87,7 @@ function Dashboard() {
         .then((res) => {
           // const imageUrl = URL.createObjectURL(res.data.image.blob());
           setFetchedImage(res.data.image);
-          console.log(res.data.description);
+          console.log(res.data);
         });
     } catch {
       alert("Gagal mengambil gambar!");
