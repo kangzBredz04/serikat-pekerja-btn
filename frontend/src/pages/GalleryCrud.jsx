@@ -1,29 +1,28 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { MdImageNotSupported } from "react-icons/md";
 
 function GalleryCrud() {
-  const [images, setImages] = useState([
-    {
-      id: 1,
-      created_at: "2023-10-01",
-      url_image:
-        "https://signfix.com.au/wp-content/uploads/2017/09/placeholder-600x400.png",
-      description: "Gambar 1",
-    },
-    {
-      id: 2,
-      created_at: "2023-10-02",
-      url_image:
-        "https://signfix.com.au/wp-content/uploads/2017/09/placeholder-600x400.png",
-      description: "Gambar 2",
-    },
-  ]);
+  const [images, setImages] = useState([]);
 
+  const backendUrl = "https://serikat-pekerja-btn-api.vercel.app/api";
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOrder, setSortOrder] = useState("newest");
   const [showModal, setShowModal] = useState(false);
   const [currentImage, setCurrentImage] = useState(null);
   const [imageFile, setImageFile] = useState(null);
   const [newImage, setNewImage] = useState({ description: "" });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch(`${backendUrl}/gallery/get-all`)
+      .then((response) => response.json())
+      .then((res) => {
+        setImages(res.images);
+        console.log(res);
+      })
+      .catch((error) => console.error("Error fetching images:", error))
+      .finally(() => setLoading(false));
+  }, []);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -100,38 +99,55 @@ function GalleryCrud() {
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-        {filteredImages.map((image) => (
-          <div key={image.id} className="relative group">
-            {image.url_image && (
-              <img
-                src={image.url_image}
-                alt={image.description}
-                className="w-full h-48 object-cover rounded"
-              />
-            )}
-            <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded">
-              <div className="text-white text-center">
-                <p>{image.description}</p>
-                <button
-                  onClick={() => {
-                    setCurrentImage(image);
-                    setNewImage(image);
-                    setShowModal(true);
-                  }}
-                  className="mt-2 bg-yellow-500 p-1 rounded"
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => handleDeleteImage(image.id)}
-                  className="mt-2 bg-red-500 p-1 rounded ml-2"
-                >
-                  Delete
-                </button>
+        {loading ? (
+          Array.from({ length: 8 }).map((_, index) => (
+            <div
+              key={index}
+              className="w-full h-48 bg-gray-300 animate-pulse rounded"
+            ></div>
+          ))
+        ) : filteredImages.length > 0 ? (
+          filteredImages.map((image) => (
+            <div key={image.id} className="relative group">
+              {image.image && (
+                <img
+                  src={image.image}
+                  alt={image.description}
+                  className="w-full h-48 object-cover rounded"
+                />
+              )}
+              <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded">
+                <div className="text-white text-center">
+                  <p>{image.description}</p>
+                  <button
+                    onClick={() => {
+                      setCurrentImage(image);
+                      setNewImage(image);
+                      setShowModal(true);
+                    }}
+                    className="mt-2 bg-yellow-500 p-1 rounded"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDeleteImage(image.id)}
+                    className="mt-2 bg-red-500 p-1 rounded ml-2"
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
             </div>
+          ))
+        ) : (
+          <div className="flex flex-col items-center justify-center col-span-full text-gray-500 p-6 ">
+            <MdImageNotSupported size={48} className="text-gray-400 mb-2" />
+            <p className="text-lg font-semibold">No images found</p>
+            <p className="text-sm text-gray-600">
+              Try adjusting your search criteria.
+            </p>
           </div>
-        ))}
+        )}
       </div>
 
       {showModal && (
