@@ -21,8 +21,8 @@ function Dashboard() {
   const [isImageSelected, setIsImageSelected] = useState(false);
   const [imageLoading, setImageLoading] = useState(true);
 
-  // const backendUrl = "http://localhost:3000/api";
-  const backendUrl = "https://serikat-pekerja-btn-api.vercel.app/api";
+  const backendUrl = "http://localhost:3000/api";
+  // const backendUrl = "https://serikat-pekerja-btn-api.vercel.app/api";
 
   useEffect(() => {
     setStats({
@@ -82,15 +82,13 @@ function Dashboard() {
     try {
       const response = await fetch(
         `${backendUrl}/organizational-structure/get-image-organizational-structure`
-      );
-
-      if (!response.ok) {
-        alert("Gagal mengambil gambar!");
-        return;
-      }
-
-      const imageUrl = URL.createObjectURL(await response.blob());
-      setFetchedImage(imageUrl);
+      )
+        .then((response) => response.json())
+        .then((res) => {
+          // const imageUrl = URL.createObjectURL(res.data.image.blob());
+          setFetchedImage(res.data.image);
+          console.log(res.data.description);
+        });
     } catch {
       alert("Gagal mengambil gambar!");
     } finally {
