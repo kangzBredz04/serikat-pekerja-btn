@@ -1,6 +1,9 @@
 import multer from "multer"
 import { pool } from "../config/db.js"
 
+const storage = multer.memoryStorage();
+export const upload = multer({ storage });
+
 export const getAllGallery = async (_req, res) => {
     try {
         const result = await pool.query("SELECT * FROM gallery")
@@ -10,8 +13,6 @@ export const getAllGallery = async (_req, res) => {
     }
 }
 
-const storage = multer.memoryStorage();
-export const upload = multer({ storage });
 
 export const addImage = async (req, res) => {
     try {
@@ -30,6 +31,6 @@ export const addImage = async (req, res) => {
         });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ success: false, message: "Upload gagal!" });
+        res.status(500).json({ success: false, message: "Upload gagal!", error: error.message });
     }
 }
