@@ -1,134 +1,173 @@
 import { useState } from "react";
-import { FaTrash, FaSearch, FaEdit } from "react-icons/fa";
-import { MdClose } from "react-icons/md";
 
 function GalleryCrud() {
-  const [images, setImages] = useState([]);
-  const [search, setSearch] = useState("");
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [itemsPerPage, setItemsPerPage] = useState(5);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [images, setImages] = useState([
+    {
+      id: 1,
+      created_at: "2023-10-01",
+      url_image:
+        "https://signfix.com.au/wp-content/uploads/2017/09/placeholder-600x400.png",
+      description: "Gambar 1",
+    },
+    {
+      id: 2,
+      created_at: "2023-10-02",
+      url_image:
+        "https://signfix.com.au/wp-content/uploads/2017/09/placeholder-600x400.png",
+      description: "Gambar 2",
+    },
+  ]);
 
-  const handleAddImage = (e) => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortOrder, setSortOrder] = useState("newest");
+  const [showModal, setShowModal] = useState(false);
+  const [currentImage, setCurrentImage] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
+  const [newImage, setNewImage] = useState({ description: "" });
+
+  const handleFileChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      const newImage = {
-        id: Date.now(),
-        name: file.name,
-        url: URL.createObjectURL(file),
-      };
-      setImages([...images, newImage]);
-    }
+    setImageFile(file);
   };
 
-  const handleDelete = (id) => {
+  const handleSaveImage = () => {
+    if (currentImage) {
+      setImages(
+        images.map((img) =>
+          img.id === currentImage.id
+            ? { ...img, ...newImage, url_image: URL.createObjectURL(imageFile) }
+            : img
+        )
+      );
+    } else {
+      setImages([
+        ...images,
+        {
+          id: images.length + 1,
+          created_at: new Date().toISOString(),
+          url_image: URL.createObjectURL(imageFile),
+          ...newImage,
+        },
+      ]);
+    }
+    setShowModal(false);
+    setNewImage({ description: "" });
+    setImageFile(null);
+    setCurrentImage(null);
+  };
+
+  const handleDeleteImage = (id) => {
     setImages(images.filter((img) => img.id !== id));
   };
 
-  const handleEdit = (id, newName) => {
-    setImages(
-      images.map((img) => (img.id === id ? { ...img, name: newName } : img))
-    );
-  };
-
-  const filteredImages = images.filter((img) =>
-    img.name.toLowerCase().includes(search.toLowerCase())
-  );
-
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentImages = filteredImages.slice(indexOfFirstItem, indexOfLastItem);
-
-  const totalPages = Math.ceil(filteredImages.length / itemsPerPage);
+  const filteredImages = images
+    .filter((image) =>
+      image.description.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .sort((a, b) => {
+      return sortOrder === "newest"
+        ? new Date(b.created_at) - new Date(a.created_at)
+        : new Date(a.created_at) - new Date(b.created_at);
+    });
 
   return (
-    <div className="p-4">
-      <div className="flex justify-between items-center mb-4">
+    <div className="p-4  mx-auto">
+      <h1 className="text-2xl font-bold mb-4 text-center">Gallery</h1>
+      <div className="flex flex-col md:flex-row justify-between items-center mb-4 gap-2">
         <input
-          type="file"
-          accept="image/*"
-          onChange={handleAddImage}
-          className="border p-2 rounded-lg"
+          type="text"
+          placeholder="Search by description"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="p-2 border rounded w-full md:w-auto"
         />
-        <div className="relative">
-          <input
-            type="text"
-            placeholder="Search by image name..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="border p-2 rounded-lg pl-10"
-          />
-          <FaSearch className="absolute left-3 top-3 text-gray-500" />
-        </div>
+        <select
+          onChange={(e) => setSortOrder(e.target.value)}
+          className="p-2 border rounded"
+        >
+          <option value="newest">Newest First</option>
+          <option value="oldest">Oldest First</option>
+        </select>
+        <button
+          onClick={() => {
+            setCurrentImage(null);
+            setShowModal(true);
+          }}
+          className="bg-blue-500 text-white p-2 rounded"
+        >
+          Add Image
+        </button>
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {currentImages.map((img) => (
-          <div key={img.id} className="relative border p-2 rounded-lg shadow">
-            <img
-              src={img.url}
-              alt={img.name}
-              className="w-full h-32 object-cover rounded"
-            />
-            <p className="mt-2 text-center">{img.name}</p>
-            <div className="absolute top-2 right-2 flex gap-2">
-              <button
-                onClick={() => setSelectedImage(img)}
-                className="bg-blue-500 text-white px-2 py-1 rounded"
-              >
-                <FaEdit />
-              </button>
-              <button
-                onClick={() => handleDelete(img.id)}
-                className="bg-red-500 text-white px-2 py-1 rounded"
-              >
-                <FaTrash />
-              </button>
+
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+        {filteredImages.map((image) => (
+          <div key={image.id} className="relative group">
+            {image.url_image && (
+              <img
+                src={image.url_image}
+                alt={image.description}
+                className="w-full h-48 object-cover rounded"
+              />
+            )}
+            <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded">
+              <div className="text-white text-center">
+                <p>{image.description}</p>
+                <button
+                  onClick={() => {
+                    setCurrentImage(image);
+                    setNewImage(image);
+                    setShowModal(true);
+                  }}
+                  className="mt-2 bg-yellow-500 p-1 rounded"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDeleteImage(image.id)}
+                  className="mt-2 bg-red-500 p-1 rounded ml-2"
+                >
+                  Delete
+                </button>
+              </div>
             </div>
           </div>
         ))}
       </div>
-      <div className="flex justify-between items-center mt-4">
-        <div>
-          <label className="mr-2">Rows per page:</label>
-          <select
-            value={itemsPerPage}
-            onChange={(e) => setItemsPerPage(Number(e.target.value))}
-            className="border p-2 rounded-lg"
-          >
-            <option value={5}>5</option>
-            <option value={10}>10</option>
-            <option value={filteredImages.length}>All</option>
-          </select>
-        </div>
-        <div className="flex gap-2">
-          {[...Array(totalPages)].map((_, i) => (
-            <button
-              key={i}
-              className={`px-3 py-1 border rounded ${
-                currentPage === i + 1 ? "bg-gray-300" : ""
-              }`}
-              onClick={() => setCurrentPage(i + 1)}
-            >
-              {i + 1}
-            </button>
-          ))}
-        </div>
-      </div>
-      {selectedImage && (
-        <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center backdrop-blur-sm">
-          <div className="bg-white p-6 rounded-lg w-96">
-            <div className="flex justify-between">
-              <h2 className="text-xl font-bold">Edit Image</h2>
-              <button onClick={() => setSelectedImage(null)}>
-                <MdClose className="text-xl" />
-              </button>
-            </div>
+
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-4 rounded w-80">
+            <h2 className="text-xl font-bold mb-4">
+              {currentImage ? "Edit Image" : "Add Image"}
+            </h2>
+            <input
+              type="file"
+              onChange={handleFileChange}
+              className="p-2 border rounded w-full mb-2"
+            />
             <input
               type="text"
-              value={selectedImage.name}
-              onChange={(e) => handleEdit(selectedImage.id, e.target.value)}
-              className="border p-2 w-full rounded-lg mt-2"
+              placeholder="Description"
+              value={newImage.description}
+              onChange={(e) =>
+                setNewImage({ ...newImage, description: e.target.value })
+              }
+              className="p-2 border rounded w-full mb-2"
             />
+            <div className="flex justify-end">
+              <button
+                onClick={() => setShowModal(false)}
+                className="bg-gray-500 text-white p-2 rounded mr-2"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveImage}
+                className="bg-blue-500 text-white p-2 rounded"
+              >
+                {currentImage ? "Save" : "Add"}
+              </button>
+            </div>
           </div>
         </div>
       )}
