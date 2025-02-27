@@ -5,7 +5,7 @@ import { AllContext } from "../App";
 
 function Dashboard() {
   const navigate = useNavigate();
-  const { news, gallery, users } = useContext(AllContext);
+  const { news, gallery, users, imageOrganizational } = useContext(AllContext);
 
   const [stats, setStats] = useState({
     newsCount: 0,
@@ -21,7 +21,6 @@ function Dashboard() {
   const [isImageSelected, setIsImageSelected] = useState(false);
   const [imageLoading, setImageLoading] = useState(true);
 
-  // const backendUrl = "http://localhost:3000/api";
   const backendUrl = "https://serikat-pekerja-btn-api.vercel.app/api";
 
   useEffect(() => {
@@ -40,6 +39,13 @@ function Dashboard() {
       navigate("/unauthorized");
     }
   }, [navigate]);
+
+  useEffect(() => {
+    if (imageOrganizational) {
+      setFetchedImage(imageOrganizational);
+      setImageLoading(false);
+    }
+  }, [fetchedImage, imageOrganizational]);
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -77,27 +83,6 @@ function Dashboard() {
       setLoading(false);
     }
   };
-
-  const handleFetchImage = async () => {
-    try {
-      await fetch(
-        `${backendUrl}/organizational-structure/get-image-organizational-structure`
-      )
-        .then((response) => response.json())
-        .then((res) => {
-          setFetchedImage(res.data.image);
-          console.log(res.data);
-        });
-    } catch {
-      alert("Gagal mengambil gambar!");
-    } finally {
-      setImageLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    handleFetchImage();
-  }, []);
 
   return (
     <div className="min-h-[80vh] p-6 mx-auto max-w-6xl">
