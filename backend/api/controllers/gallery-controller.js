@@ -13,6 +13,30 @@ export const getAllGallery = async (_req, res) => {
     }
 }
 
+export const getImages = async (_req, res) => {
+    try {
+        const query = `SELECT id, created_at, filename, mimetype, image_base64, description FROM images`;
+        const result = await pool.query(query);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ success: false, message: "Tidak ada gambar ditemukan!" });
+        }
+
+        const images = result.rows.map(image => ({
+            id: image.id,
+            created_at: image.created_at,
+            description: image.description,
+            mimetype: image.mimetype,
+            image: `data:${image.mimetype};base64,${image.image_base64}`
+        }));
+
+        res.status(200).json({ success: true, images });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: "Gagal mengambil gambar!" });
+    }
+}
+
 
 export const addImage = async (req, res) => {
     try {
