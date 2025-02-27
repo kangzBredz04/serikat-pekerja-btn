@@ -18,7 +18,7 @@ function App() {
 
   useEffect(() => {
     api.get("/new/get-all").then((response) => setNews(response));
-    api.get("/gallery/get-all").then((response) => setGallery(response));
+    api.get("/gallery/get-all").then((response) => setGallery(response.images));
     api.get("/auth/get-all").then((response) => setUsers(response));
     api
       .get(`/new/get-by-id/${localStorage.getItem("id_news")}`)
