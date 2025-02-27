@@ -1,31 +1,23 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
+import { AllContext } from "../App";
 
 const Organization = () => {
+  const { imageOrganizational } = useContext(AllContext);
+
   const [isOpen, setIsOpen] = useState(false);
   const [fetchedImage, setFetchedImage] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // const backendUrl = "http://localhost:3000/api";
-  const backendUrl = "https://serikat-pekerja-btn-api.vercel.app/api";
-
-  const handleFetchImage = async () => {
-    try {
-      const response = await fetch(
-        `${backendUrl}/organizational-structure/get-image-organizational-structure`
-      );
-      const imageUrl = URL.createObjectURL(await response.blob());
-      setFetchedImage(imageUrl);
-    } catch (error) {
-      console.error("Gagal mengambil gambar", error);
-    } finally {
+  useEffect(() => {
+    if (imageOrganizational) {
+      setFetchedImage(imageOrganizational);
       setLoading(false);
     }
-  };
+  }, [fetchedImage, imageOrganizational]);
 
-  useEffect(() => {
-    handleFetchImage();
-  }, []);
+  console.log(fetchedImage);
+
   return (
     <div className="max-w-5xl mx-auto px-4 py-10 text-center">
       <div className="space-y-6">
@@ -76,14 +68,14 @@ const Organization = () => {
         <h2 className="text-2xl font-bold text-red-700 mt-8">
           Struktur Organisasi SP-BTN
         </h2>
-        <div className="mt-6 bg-white p-6 text-center">
+        <div className="mt-6 bg-white p-3 text-center">
           {loading ? (
             <div className="w-full max-w-md md:max-w-lg lg:max-w-2xl h-64 bg-gray-200 animate-pulse mx-auto" />
           ) : (
             <img
               src={fetchedImage}
               alt="Struktur Organisasi SP-BTN"
-              className="mx-auto w-full max-w-md md:max-w-lg lg:max-w-2xl cursor-pointer"
+              className="mx-auto w-full max-w-md md:max-w-lg lg:max-w-5xl cursor-pointer"
               onClick={() => setIsOpen(true)}
             />
           )}
