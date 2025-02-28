@@ -97,3 +97,38 @@ export const addOrUpdateImage = async (req, res) => {
         });
     }
 };
+
+export const deleteImage = async (req, res) => {
+    const { id } = req.params; // Ambil ID dari parameter URL
+
+    try {
+        // Query untuk menghapus gambar berdasarkan ID
+        const query = `DELETE FROM images WHERE id = $1 RETURNING *`;
+        const values = [id];
+
+        // Eksekusi query
+        const result = await pool.query(query, values);
+
+        // Cek apakah gambar berhasil dihapus
+        if (result.rowCount === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "Gambar dengan ID tersebut tidak ditemukan!",
+            });
+        }
+
+        // Response sukses
+        res.json({
+            success: true,
+            message: "Gambar berhasil dihapus!",
+            data: result.rows[0], // Mengembalikan data gambar yang dihapus
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            success: false,
+            message: "Terjadi kesalahan saat menghapus gambar!",
+            error: error.message,
+        });
+    }
+};
