@@ -1,5 +1,5 @@
-import multer from "multer"
 import { pool } from "../config/db.js"
+import multer from 'multer'
 
 const storage = multer.memoryStorage();
 export const upload = multer({ storage });
@@ -41,16 +41,13 @@ export const getImages = async (_req, res) => {
 export const addImage = async (req, res) => {
     try {
         // Cek apakah file ada
-        console.log("File:", req.file);
-        console.log("Body:", req.body);
 
-
-        // if (!req.file) {
-        //     return res.status(400).json({
-        //         success: false,
-        //         message: "File gambar tidak ditemukan!",
-        //     });
-        // }
+        if (!req.file) {
+            return res.status(400).json({
+                success: false,
+                message: "File gambar tidak ditemukan!",
+            });
+        }
 
         const { originalname, mimetype, buffer } = req.file; // File gambar
         const { description } = req.body; // Deskripsi gambar
