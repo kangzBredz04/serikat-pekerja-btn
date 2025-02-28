@@ -46,6 +46,9 @@ function GalleryCrud() {
     formData.append("image", image); // File gambar
     formData.append("description", newImage.description); // Deskripsi gambar
 
+    console.log(`Isi dari image : ${image}`);
+    console.log(`Isi dari description : ${newImage.description}`);
+
     try {
       const response = await fetch(
         "http://localhost:3000/api/gallery/add-image",
