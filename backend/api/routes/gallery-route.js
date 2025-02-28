@@ -1,9 +1,9 @@
 import express from "express"
-import { addImage, getImages } from "../controllers/gallery-controller.js";
+import { addImage, getImages, upload } from "../controllers/gallery-controller.js";
 
 const router = express.Router();
 
 router.get("/get-all", getImages);
-router.post("/add-image", addImage);
+router.post("/add-image", upload.single("image"), addImage);
 
 export default router;
