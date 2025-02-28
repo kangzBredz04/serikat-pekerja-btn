@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { MdImageNotSupported } from "react-icons/md";
 import { AllContext } from "../App";
 import { api } from "../utils";
+import { FaPlus } from "react-icons/fa6";
 
 function GalleryCrud() {
   const { gallery } = useContext(AllContext);
@@ -135,100 +136,143 @@ function GalleryCrud() {
   return (
     <div className="p-4  mx-auto">
       <h1 className="text-2xl font-bold mb-4 text-center">Gallery</h1>
-      <div className="flex flex-col md:flex-row justify-between items-center mb-4 gap-2">
+      <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+        {/* Search Input */}
         <input
           type="text"
-          placeholder="Search by description"
+          placeholder="Search by description..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="p-2 border rounded w-full md:w-auto"
+          className="p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full md:w-64 transition-all"
         />
+
+        {/* Sort Dropdown */}
         <select
           onChange={(e) => setSortOrder(e.target.value)}
-          className="p-2 border rounded"
+          className="p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 cursor-pointer transition-all"
         >
           <option value="newest">Newest First</option>
           <option value="oldest">Oldest First</option>
         </select>
+
+        {/* Add Image Button */}
         <button
           onClick={() => {
             setCurrentImage(null);
             setShowModal(true);
           }}
-          className="bg-blue-500 text-white p-2 rounded cursor-pointer"
+          className="cursor-pointer bg-blue-500 hover:bg-blue-600 text-white p-3 rounded-lg shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 w-full md:w-auto"
         >
-          Add Image
+          <FaPlus />
+          <span>Add Image</span>
         </button>
       </div>
-
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-        {loading ? (
-          Array.from({ length: 8 }).map((_, index) => (
-            <div
-              key={index}
-              className="w-full h-48 bg-gray-300 animate-pulse rounded"
-            ></div>
-          ))
-        ) : filteredImages.length > 0 ? (
-          filteredImages.map((image) => (
-            <div
-              key={image.id}
-              className="relative group overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
-            >
-              {image.image && (
-                <img
-                  src={image.image}
-                  alt={image.description}
-                  className="w-full h-48 sm:h-32 md:h-48 object-cover rounded-lg transform group-hover:scale-105 transition-transform duration-300"
-                />
-              )}
-              <div className="cursor-pointer absolute inset-0 bg-black flex items-center justify-center opacity-0 hover:opacity-80 transition-opacity duration-300">
-                <div className="text-white text-center p-2 sm:p-4">
-                  <p className="text-xs sm:text-sm font-medium">
+      <div className="overflow-x-auto">
+        <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-sm">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-6 py-4 text-left text-sm font-medium text-gray-700 uppercase tracking-wider">
+                No
+              </th>
+              <th className="px-6 py-4 text-left text-sm font-medium text-gray-700 uppercase tracking-wider">
+                Image
+              </th>
+              <th className="px-6 py-4 text-left text-sm font-medium text-gray-700 uppercase tracking-wider">
+                Description
+              </th>
+              <th className="px-6 py-4 text-left text-sm font-medium text-gray-700 uppercase tracking-wider">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-200">
+            {loading ? (
+              // Skeleton Loading while data is being fetched
+              Array.from({ length: 5 }).map((_, index) => (
+                <tr key={index}>
+                  <td className="px-6 py-5">
+                    <div className="w-6 h-4 bg-gray-300 animate-pulse rounded"></div>
+                  </td>
+                  <td className="px-6 py-5">
+                    <div className="w-32 h-24 bg-gray-300 animate-pulse rounded-lg"></div>
+                  </td>
+                  <td className="px-6 py-5">
+                    <div className="w-48 h-4 bg-gray-300 animate-pulse rounded"></div>
+                  </td>
+                  <td className="px-6 py-5">
+                    <div className="flex gap-3">
+                      <div className="w-16 h-8 bg-gray-300 animate-pulse rounded"></div>
+                      <div className="w-16 h-8 bg-gray-300 animate-pulse rounded"></div>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            ) : filteredImages.length > 0 ? (
+              // Display image data
+              filteredImages.map((image, index) => (
+                <tr
+                  key={image.id}
+                  className="hover:bg-gray-50 transition-colors"
+                >
+                  <td className="px-6 py-5 text-sm text-gray-700">
+                    {index + 1}
+                  </td>
+                  <td className="px-6 py-5">
+                    <img
+                      src={image.image}
+                      alt={image.description}
+                      className="w-32 h-24 object-cover rounded-lg"
+                    />
+                  </td>
+                  <td className="px-6 py-5 text-sm text-gray-700 max-w-xs">
                     {image.description}
-                  </p>
-                  <div className="mt-2 sm:mt-3 flex gap-2 sm:gap-4 *:cursor-pointer">
-                    {/* <button
-                      onClick={() => handleViewImage(image)}
-                      className="mt-1 sm:mt-2   bg-blue-500 hover:bg-blue-600 text-white text-xs sm:text-sm font-semibold py-1 px-2 sm:py-1 sm:px-3 rounded transition-colors duration-200"
-                    >
-                      Lihat
-                    </button> */}
-                    <button
-                      onClick={() => {
-                        setCurrentImage(image);
-                        setImage(image);
-                        setShowModal(true);
-                        setPreviewImage(image.image);
-                        setNewImage({
-                          id: image.id,
-                          description: image.description,
-                        });
-                      }}
-                      className="mt-1 sm:mt-2 bg-yellow-500 hover:bg-yellow-600 text-white text-xs sm:text-sm font-semibold py-1 px-2 sm:py-1 sm:px-3 rounded transition-colors duration-200"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDelete(image.id)}
-                      className="mt-1 sm:mt-2 bg-red-500 hover:bg-red-600 text-white text-xs sm:text-sm font-semibold py-1 px-2 sm:py-1 sm:px-3 rounded transition-colors duration-200"
-                    >
-                      Delete
-                    </button>
+                  </td>
+                  <td className="px-6 py-5">
+                    <div className="flex gap-3 *:cursor-pointer">
+                      <button
+                        onClick={() => {
+                          setCurrentImage(image);
+                          setImage(image);
+                          setShowModal(true);
+                          setPreviewImage(image.image);
+                          setNewImage({
+                            id: image.id,
+                            description: image.description,
+                          });
+                        }}
+                        className="bg-yellow-500 hover:bg-yellow-600 text-white text-sm font-semibold py-2 px-4 rounded transition-colors duration-200"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDelete(image.id)}
+                        className="bg-red-500 hover:bg-red-600 text-white text-sm font-semibold py-2 px-4 rounded transition-colors duration-200"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              // Display message if no images are found
+              <tr>
+                <td colSpan={4} className="px-6 py-8 text-center">
+                  <div className="flex flex-col items-center justify-center text-gray-500">
+                    <MdImageNotSupported
+                      size={64}
+                      className="text-gray-400 mb-4"
+                    />
+                    <p className="text-xl font-semibold">No images found</p>
+                    <p className="text-sm text-gray-600 mt-1">
+                      Try adjusting your search criteria.
+                    </p>
                   </div>
-                </div>
-              </div>
-            </div>
-          ))
-        ) : (
-          <div className="flex flex-col items-center justify-center col-span-full text-gray-500 p-6 ">
-            <MdImageNotSupported size={48} className="text-gray-400 mb-2" />
-            <p className="text-lg font-semibold">No images found</p>
-            <p className="text-sm text-gray-600">
-              Try adjusting your search criteria.
-            </p>
-          </div>
-        )}
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
 
       {showModal && (
