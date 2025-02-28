@@ -1,6 +1,5 @@
-import { useContext, useState } from "react";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { MdClose } from "react-icons/md";
+import { useContext, useEffect, useState } from "react";
+import { FaEye, FaEyeSlash, FaSearch } from "react-icons/fa";
 import { AllContext } from "../App";
 
 function UsersCrud() {
@@ -10,6 +9,13 @@ function UsersCrud() {
   const [selectedUser, setSelectedUser] = useState(null);
   const [itemsPerPage, setItemsPerPage] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (users?.length > 0) {
+      setLoading(false);
+    }
+  }, [users]);
 
   const filteredUsers = users.filter(
     (user) =>
@@ -24,76 +30,110 @@ function UsersCrud() {
 
   return (
     <div className="p-4">
-      <div className="flex justify-between items-center mb-4">
-        <input
-          type="text"
-          placeholder="Search by username or full name..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="border p-2 rounded-lg w-full max-w-md pl-10"
-        />
+      {/* Search Input */}
+      <div className="flex justify-between items-center mb-6">
+        <div className="relative w-full max-w-md">
+          <input
+            type="text"
+            placeholder="Search by username or full name..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="border p-2 rounded-lg w-full pl-10 focus:outline-none focus:ring-2 focus:ring-red-500"
+          />
+          <span className="absolute inset-y-0 left-0 pl-3 flex items-center">
+            <FaSearch className="text-gray-400" />
+          </span>
+        </div>
       </div>
 
-      <div className="relative overflow-x-auto">
-        <table className="w-full text-sm text-left border border-gray-300 rounded-lg">
-          <thead className="bg-blue-200 text-gray-700">
+      {/* Table */}
+      <div className="relative overflow-x-auto shadow-md rounded-lg">
+        <table className="w-full text-sm text-left text-gray-700">
+          <thead className="bg-red-500 text-white">
             <tr>
-              <th className="px-4 py-2 border border-gray-300">No</th>
-              <th className="px-4 py-2 border border-gray-300">Username</th>
-              <th className="px-4 py-2 border border-gray-300">Password</th>
-              <th className="px-4 py-2 border border-gray-300">Full Name</th>
-              <th className="px-4 py-2 border border-gray-300">Action</th>
+              <th className="px-6 py-3">No</th>
+              <th className="px-6 py-3">Username</th>
+              <th className="px-6 py-3">Password</th>
+              <th className="px-6 py-3">Full Name</th>
+              <th className="px-6 py-3">Action</th>
             </tr>
           </thead>
           <tbody>
-            {currentUsers.map((user, index) => (
-              <tr
-                key={user.id}
-                className="border-b border-gray-300 hover:bg-gray-100"
-              >
-                <td className="px-4 py-2">{indexOfFirstItem + index + 1}</td>
-                <td className="px-4 py-2">{user.username}</td>
-                <td className="px-4 py-2 flex items-center">
-                  {showPassword[user.id] ? user.password : "*****"}
-                  <button
-                    className="ml-2"
-                    onClick={() =>
-                      setShowPassword((prev) => ({
-                        ...prev,
-                        [user.id]: !prev[user.id],
-                      }))
-                    }
+            {loading // Skeleton loading ketika data belum muncul
+              ? [...Array(itemsPerPage)].map((_, index) => (
+                  <tr
+                    key={index}
+                    className="border-b hover:bg-gray-50 transition-colors"
                   >
-                    {showPassword[user.id] ? <FaEyeSlash /> : <FaEye />}
-                  </button>
-                </td>
-                <td className="px-4 py-2">{user.full_name}</td>
-                <td className="px-4 py-2 flex gap-2">
-                  <button
-                    className="bg-blue-500 text-white px-3 py-1 rounded"
-                    onClick={() => setSelectedUser(user)}
+                    <td className="px-6 py-4">
+                      <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
+                    </td>
+                    <td className="px-6 py-4 flex gap-2">
+                      <div className="h-8 w-20 bg-gray-200 rounded animate-pulse"></div>
+                      <div className="h-8 w-20 bg-gray-200 rounded animate-pulse"></div>
+                    </td>
+                  </tr>
+                ))
+              : currentUsers.map((user, index) => (
+                  <tr
+                    key={user.id}
+                    className="border-b hover:bg-gray-50 transition-colors"
                   >
-                    Lihat Detail
-                  </button>
-                  {localStorage.getItem("id_admin") == 1 && (
-                    <button className="bg-red-500 text-white px-3 py-1 rounded">
-                      Hapus Pengguna
-                    </button>
-                  )}
-                </td>
-              </tr>
-            ))}
+                    <td className="px-6 py-4">
+                      {indexOfFirstItem + index + 1}
+                    </td>
+                    <td className="px-6 py-4">{user.username}</td>
+                    <td className="px-6 py-4 flex items-center">
+                      {showPassword[user.id] ? user.password : "*****"}
+                      <button
+                        className="ml-2 text-gray-500 hover:text-gray-700"
+                        onClick={() =>
+                          setShowPassword((prev) => ({
+                            ...prev,
+                            [user.id]: !prev[user.id],
+                          }))
+                        }
+                      >
+                        {showPassword[user.id] ? <FaEyeSlash /> : <FaEye />}
+                      </button>
+                    </td>
+                    <td className="px-6 py-4">{user.full_name}</td>
+                    <td className="px-6 py-4 flex gap-2">
+                      <button
+                        className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600 transition-colors"
+                        onClick={() => setSelectedUser(user)}
+                      >
+                        Lihat Detail
+                      </button>
+                      {localStorage.getItem("id_admin") == 1 && (
+                        <button className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 transition-colors">
+                          Hapus Pengguna
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                ))}
           </tbody>
         </table>
       </div>
 
-      <div className="flex justify-between items-center mt-4">
+      {/* Pagination */}
+      <div className="flex justify-between items-center mt-6">
         <div>
-          <label className="mr-2">Rows per page:</label>
+          <label className="mr-2 text-gray-700">Rows per page:</label>
           <select
             value={itemsPerPage}
             onChange={(e) => setItemsPerPage(Number(e.target.value))}
-            className="border p-2 rounded-lg"
+            className="border p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
           >
             <option value={5}>5</option>
             <option value={10}>10</option>
@@ -104,8 +144,10 @@ function UsersCrud() {
           {[...Array(totalPages)].map((_, i) => (
             <button
               key={i}
-              className={`px-3 py-1 border rounded ${
-                currentPage === i + 1 ? "bg-gray-300" : ""
+              className={`px-3 py-1 border rounded transition-colors ${
+                currentPage === i + 1
+                  ? "bg-red-500 text-white"
+                  : "bg-white text-gray-700 hover:bg-gray-100"
               }`}
               onClick={() => setCurrentPage(i + 1)}
             >
@@ -115,24 +157,34 @@ function UsersCrud() {
         </div>
       </div>
 
+      {/* Modal */}
       {selectedUser && (
-        <div className="fixed inset-0 bg-gray-900  backdrop-blur-md flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg w-96 shadow-lg">
-            <div className="flex justify-between mb-4">
-              <h2 className="text-xl font-bold">User Details</h2>
-              <button onClick={() => setSelectedUser(null)}>
-                <MdClose className="text-xl" />
+        <div className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-md flex items-center justify-center p-6">
+          <div className="bg-white p-6 rounded-2xl w-96 shadow-2xl border border-gray-300 transform transition-all scale-100">
+            <div className="flex justify-between items-center border-b pb-3">
+              <h2 className="text-xl font-semibold text-gray-900">
+                User Details
+              </h2>
+            </div>
+            <div className="mt-4 space-y-3 text-gray-700">
+              <p>
+                <strong>Username:</strong> {selectedUser.username}
+              </p>
+              <p>
+                <strong>Password:</strong> {selectedUser.password}
+              </p>
+              <p>
+                <strong>Full Name:</strong> {selectedUser.full_name}
+              </p>
+            </div>
+            <div className="mt-5 flex justify-end">
+              <button
+                onClick={() => setSelectedUser(null)}
+                className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition"
+              >
+                Close
               </button>
             </div>
-            <p>
-              <strong>Username:</strong> {selectedUser.username}
-            </p>
-            <p>
-              <strong>Password:</strong> {selectedUser.password}
-            </p>
-            <p>
-              <strong>Full Name:</strong> {selectedUser.full_name}
-            </p>
           </div>
         </div>
       )}
