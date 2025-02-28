@@ -48,7 +48,7 @@ function Gallery() {
                 onClick={() => handleImageClick(indexOfFirstItem + index)}
               >
                 <img
-                  src={item.image_url}
+                  src={item.image}
                   alt={item.description}
                   className="w-full h-72 object-cover"
                 />
@@ -107,7 +107,7 @@ function Gallery() {
           </button>
           <div className="bg-white p-5 rounded-lg shadow-lg">
             <img
-              src={gallery[selectedImage].image_url}
+              src={gallery[selectedImage].image}
               alt={gallery[selectedImage].description}
               className="max-w-full max-h-[80vh] object-contain"
             />
