@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { MdImageNotSupported } from "react-icons/md";
 import { AllContext } from "../App";
+import { api } from "../utils";
 
 function GalleryCrud() {
   const { gallery } = useContext(AllContext);
@@ -108,6 +109,29 @@ function GalleryCrud() {
     setShowModal(true);
   };
 
+  const handleDelete = async (id) => {
+    // Tampilkan konfirmasi
+    const isConfirmed = confirm("Apakah anda akan menghapus gambar ini?");
+    if (!isConfirmed) return; // Jika pengguna membatalkan, hentikan proses
+
+    try {
+      // Kirim request DELETE ke backend
+      const response = api.delete(`/gallery/delete-image/${id}`);
+
+      const result = await response.json();
+
+      if (result.success) {
+        alert("Gambar berhasil dihapus!");
+        window.location.reload(); // Refresh halaman setelah penghapusan berhasil
+      } else {
+        alert(result.message);
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Gagal menghapus gambar!");
+    }
+  };
+
   return (
     <div className="p-4  mx-auto">
       <h1 className="text-2xl font-bold mb-4 text-center">Gallery</h1>
@@ -164,12 +188,12 @@ function GalleryCrud() {
                     {image.description}
                   </p>
                   <div className="mt-2 sm:mt-3 flex gap-2 sm:gap-4 *:cursor-pointer">
-                    <button
+                    {/* <button
                       onClick={() => handleViewImage(image)}
                       className="mt-1 sm:mt-2   bg-blue-500 hover:bg-blue-600 text-white text-xs sm:text-sm font-semibold py-1 px-2 sm:py-1 sm:px-3 rounded transition-colors duration-200"
                     >
                       Lihat
-                    </button>
+                    </button> */}
                     <button
                       onClick={() => {
                         setCurrentImage(image);
@@ -186,9 +210,7 @@ function GalleryCrud() {
                       Edit
                     </button>
                     <button
-                      onClick={() =>
-                        confirm("Apakah anda akan menghapus gambar ini?")
-                      }
+                      onClick={() => handleDelete(image.id)}
                       className="mt-1 sm:mt-2 bg-red-500 hover:bg-red-600 text-white text-xs sm:text-sm font-semibold py-1 px-2 sm:py-1 sm:px-3 rounded transition-colors duration-200"
                     >
                       Delete
