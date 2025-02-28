@@ -64,8 +64,8 @@ function Dashboard() {
 
     try {
       const response = await fetch(
-        // "https://serikat-pekerja-btn-api.vercel.app/api/organizational-structure/image",
-        "http://localhost:3000/api/organizational-structure/image",
+        "https://serikat-pekerja-btn-api.vercel.app/api/organizational-structure/image",
+        // "http://localhost:3000/api/organizational-structure/image",
         { method: "POST", body: formData }
       );
       const result = await response.json();
