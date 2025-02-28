@@ -10,7 +10,7 @@ function GalleryCrud() {
   const [sortOrder, setSortOrder] = useState("newest");
   const [showModal, setShowModal] = useState(false);
   const [currentImage, setCurrentImage] = useState(null);
-  const [newImage, setNewImage] = useState({ description: "" });
+  const [newImage, setNewImage] = useState({ id: null, description: "" });
   const [loading, setLoading] = useState(true);
   const [previewImage, setPreviewImage] = useState(null);
   const [isImageSelected, setIsImageSelected] = useState(false);
@@ -25,6 +25,8 @@ function GalleryCrud() {
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
+    console.log(file);
+
     if (file) {
       setImage(file);
       setPreviewImage(URL.createObjectURL(file));
@@ -33,6 +35,7 @@ function GalleryCrud() {
   };
 
   const handleUpload = async () => {
+    // Validasi input
     if (!image) {
       alert("Pilih gambar terlebih dahulu!");
       return;
@@ -41,34 +44,50 @@ function GalleryCrud() {
       alert("Masukkan deskripsi gambar!");
       return;
     }
+
     setLoading(true);
+
+    // Buat FormData untuk mengirim file dan data
     const formData = new FormData();
     formData.append("image", image); // File gambar
-    formData.append("description", newImage.description); // Deskripsi gambar
+    formData.append("description", newImage.description);
 
-    console.log(`Isi dari image : ${image}`);
-    console.log(`Isi dari description : ${newImage.description}`);
+    // Jika ada ID, tambahkan ke FormData untuk update
+    if (newImage.id) {
+      formData.append("id", newImage.id);
+    }
 
     try {
-      const response = await fetch(
-        "http://localhost:3000/api/gallery/add-image",
-        {
-          method: "POST",
-          body: formData, // Mengirim FormData yang berisi file dan deskripsi
-        }
-      );
+      // Tentukan endpoint dan method berdasarkan apakah ada ID
+      const endpoint = newImage.id
+        ? "http://localhost:3000/api/gallery/update-image" // Endpoint untuk update
+        : "http://localhost:3000/api/gallery/add-image"; // Endpoint untuk upload
+
+      const method = newImage.id ? "PUT" : "POST"; // Method PUT untuk update, POST untuk upload
+
+      // Kirim request ke backend
+      const response = await fetch(endpoint, {
+        method: method,
+        body: formData, // Mengirim FormData yang berisi file dan deskripsi
+      });
 
       const result = await response.json();
 
       if (result.success) {
-        alert("Gambar berhasil diunggah!");
-        window.location.reload(); // Refresh halaman setelah upload berhasil
+        alert(
+          newImage.id
+            ? "Gambar berhasil diupdate!"
+            : "Gambar berhasil diunggah!"
+        );
+        window.location.reload(); // Refresh halaman setelah upload/update berhasil
       } else {
         alert(result.message);
       }
     } catch (error) {
       console.error(error);
-      alert("Gagal mengunggah gambar!");
+      alert(
+        newImage.id ? "Gagal mengupdate gambar!" : "Gagal mengunggah gambar!"
+      );
     } finally {
       setLoading(false);
     }
@@ -83,6 +102,11 @@ function GalleryCrud() {
         ? new Date(b.created_at) - new Date(a.created_at)
         : new Date(a.created_at) - new Date(b.created_at);
     });
+
+  const handleViewImage = (image) => {
+    setCurrentImage(image);
+    setShowModal(true);
+  };
 
   return (
     <div className="p-4  mx-auto">
@@ -123,35 +147,53 @@ function GalleryCrud() {
           ))
         ) : filteredImages.length > 0 ? (
           filteredImages.map((image) => (
-            <div key={image.id} className="relative group">
+            <div
+              key={image.id}
+              className="relative group overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
+            >
               {image.image && (
                 <img
                   src={image.image}
                   alt={image.description}
-                  className="w-full h-48 object-cover rounded"
+                  className="w-full h-48 sm:h-32 md:h-48 object-cover rounded-lg transform group-hover:scale-105 transition-transform duration-300"
                 />
               )}
-              <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded">
-                <div className="text-white text-center">
-                  <p>{image.description}</p>
-                  <button
-                    onClick={() => {
-                      setCurrentImage(image);
-                      setNewImage(image);
-                      setShowModal(true);
-                    }}
-                    className="mt-2 bg-yellow-500 p-1 rounded"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() =>
-                      confirm("Apakah anda akan menghapus gambar ini?")
-                    }
-                    className="mt-2 bg-red-500 p-1 rounded ml-2"
-                  >
-                    Delete
-                  </button>
+              <div className="cursor-pointer absolute inset-0 bg-black flex items-center justify-center opacity-0 hover:opacity-80 transition-opacity duration-300">
+                <div className="text-white text-center p-2 sm:p-4">
+                  <p className="text-xs sm:text-sm font-medium">
+                    {image.description}
+                  </p>
+                  <div className="mt-2 sm:mt-3 flex gap-2 sm:gap-4 *:cursor-pointer">
+                    <button
+                      onClick={() => handleViewImage(image)}
+                      className="mt-1 sm:mt-2   bg-blue-500 hover:bg-blue-600 text-white text-xs sm:text-sm font-semibold py-1 px-2 sm:py-1 sm:px-3 rounded transition-colors duration-200"
+                    >
+                      Lihat
+                    </button>
+                    <button
+                      onClick={() => {
+                        setCurrentImage(image);
+                        setImage(image);
+                        setShowModal(true);
+                        setPreviewImage(image.image);
+                        setNewImage({
+                          id: image.id,
+                          description: image.description,
+                        });
+                      }}
+                      className="mt-1 sm:mt-2 bg-yellow-500 hover:bg-yellow-600 text-white text-xs sm:text-sm font-semibold py-1 px-2 sm:py-1 sm:px-3 rounded transition-colors duration-200"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() =>
+                        confirm("Apakah anda akan menghapus gambar ini?")
+                      }
+                      className="mt-1 sm:mt-2 bg-red-500 hover:bg-red-600 text-white text-xs sm:text-sm font-semibold py-1 px-2 sm:py-1 sm:px-3 rounded transition-colors duration-200"
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -223,6 +265,7 @@ function GalleryCrud() {
                   setImage(null);
                   setPreviewImage(null);
                   setIsImageSelected(false);
+                  setNewImage({ description: "" });
                 }}
                 className="cursor-pointer bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
               >
@@ -238,6 +281,30 @@ function GalleryCrud() {
           </div>
         </div>
       )}
+
+      {/* Modal untuk menampilkan gambar */}
+      {/* {showModal && currentImage && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 z-50 p-4">
+          <div className="bg-white p-4 sm:p-6 rounded-lg max-w-[90vw] max-h-[80vh] overflow-auto">
+            <img
+              src={currentImage.image}
+              alt={currentImage.description}
+              className="w-full h-auto rounded-lg"
+            />
+            <div className="mt-4 text-center">
+              <p className="text-sm sm:text-lg font-semibold">
+                {currentImage.description}
+              </p>
+              <button
+                onClick={() => setShowModal(false)}
+                className="mt-4 bg-gray-500 hover:bg-gray-600 text-white text-sm sm:text-base font-semibold py-2 px-3 sm:py-2 sm:px-4 rounded transition-colors duration-200"
+              >
+                Tutup
+              </button>
+            </div>
+          </div>
+        </div>
+      )} */}
     </div>
   );
 }
