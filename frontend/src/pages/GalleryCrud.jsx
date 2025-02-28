@@ -60,8 +60,8 @@ function GalleryCrud() {
     try {
       // Tentukan endpoint dan method berdasarkan apakah ada ID
       const endpoint = newImage.id
-        ? "http://localhost:3000/api/gallery/update-image" // Endpoint untuk update
-        : "http://localhost:3000/api/gallery/add-image"; // Endpoint untuk upload
+        ? "https://serikat-pekerja-btn-api.vercel.app/api/gallery/update-image" // Endpoint untuk update
+        : "https://serikat-pekerja-btn-api.vercel.app/api/gallery/add-image"; // Endpoint untuk upload
 
       const method = newImage.id ? "PUT" : "POST"; // Method PUT untuk update, POST untuk upload
 
