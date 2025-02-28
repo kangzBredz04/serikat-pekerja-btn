@@ -37,11 +37,9 @@ export const getImages = async (_req, res) => {
     }
 }
 
-
-export const addImage = async (req, res) => {
+export const addOrUpdateImage = async (req, res) => {
     try {
         // Cek apakah file ada
-
         if (!req.file) {
             return res.status(400).json({
                 success: false,
@@ -50,34 +48,52 @@ export const addImage = async (req, res) => {
         }
 
         const { originalname, mimetype, buffer } = req.file; // File gambar
-        const { description } = req.body; // Deskripsi gambar
+        const { id, description } = req.body; // ID dan deskripsi gambar
 
         // Konversi buffer ke base64
         const base64Image = buffer.toString("base64");
 
-        // Query untuk menyimpan ke database
-        const query = `
-      INSERT INTO images (filename, mimetype, image_base64, description)
-      VALUES ($1, $2, $3, $4)
-      RETURNING *
-    `;
-        const values = [originalname, mimetype, base64Image, description];
+        let result;
+        if (id) {
+            // Jika ID ada, lakukan UPDATE
+            const updateQuery = `
+                UPDATE images 
+                SET filename = $1, mimetype = $2, image_base64 = $3, description = $4 
+                WHERE id = $5 
+                RETURNING *`;
+            const updateValues = [originalname, mimetype, base64Image, description, id];
 
-        // Eksekusi query
-        const result = await pool.query(query, values);
+            result = await pool.query(updateQuery, updateValues);
+
+            if (result.rowCount === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Gambar dengan ID tersebut tidak ditemukan!",
+                });
+            }
+        } else {
+            // Jika ID tidak ada, lakukan INSERT
+            const insertQuery = `
+                INSERT INTO images (filename, mimetype, image_base64, description) 
+                VALUES ($1, $2, $3, $4) 
+                RETURNING *`;
+            const insertValues = [originalname, mimetype, base64Image, description];
+
+            result = await pool.query(insertQuery, insertValues);
+        }
 
         // Response sukses
         res.json({
             success: true,
-            message: "Gambar berhasil diunggah!",
+            message: id ? "Gambar berhasil diupdate!" : "Gambar berhasil diunggah!",
             data: result.rows[0],
         });
     } catch (error) {
         console.error(error);
         res.status(500).json({
             success: false,
-            message: "Upload gagal!",
+            message: "Terjadi kesalahan saat mengunggah/mengupdate gambar!",
             error: error.message,
         });
     }
-}
+};
