@@ -44,8 +44,6 @@ function Dashboard() {
     }
   }, [fetchedImage, imageOrganizational]);
 
-  console.log(fetchedImage);
-
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -63,9 +61,11 @@ function Dashboard() {
     setLoading(true);
     const formData = new FormData();
     formData.append("image", image);
+
     try {
       const response = await fetch(
-        "https://serikat-pekerja-btn-api.vercel.app/api/organizational-structure/image",
+        // "https://serikat-pekerja-btn-api.vercel.app/api/organizational-structure/image",
+        "http://localhost:3000/api/organizational-structure/image",
         { method: "POST", body: formData }
       );
       const result = await response.json();
