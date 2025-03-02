@@ -1,5 +1,10 @@
 import { useContext, useEffect, useState } from "react";
-import { FaEye, FaEyeSlash, FaSearch } from "react-icons/fa";
+import {
+  FaExclamationCircle,
+  FaEye,
+  FaEyeSlash,
+  FaSearch,
+} from "react-icons/fa";
 import { AllContext } from "../App";
 
 function UsersCrud() {
@@ -31,14 +36,18 @@ function UsersCrud() {
   return (
     <div className="p-4">
       {/* Search Input */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center mb-6 bg-red-100 p-4 rounded-lg shadow-md">
+        {/* Placeholder untuk tombol atau konten di sebelah kiri (bisa diisi nanti) */}
+        <div></div>
+
+        {/* Search Input (Right) */}
         <div className="relative w-full max-w-md">
           <input
             type="text"
             placeholder="Search by username or full name..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="border p-2 rounded-lg w-full pl-10 focus:outline-none focus:ring-2 focus:ring-red-500"
+            className="border border-red-400 focus:ring-2 focus:ring-red-500 focus:outline-none p-2 rounded-lg w-full pl-10 shadow-sm transition"
           />
           <span className="absolute inset-y-0 left-0 pl-3 flex items-center">
             <FaSearch className="text-gray-400" />
@@ -47,109 +56,121 @@ function UsersCrud() {
       </div>
 
       {/* Table */}
-      <div className="relative overflow-x-auto shadow-md rounded-lg">
-        <table className="w-full text-sm text-left text-gray-700">
-          <thead className="bg-red-500 text-white">
+      <div className="overflow-x-auto">
+        <table className="w-full text-left border border-red-600 rounded-lg overflow-hidden">
+          <thead className="text-center bg-red-600 text-white">
             <tr>
-              <th className="px-6 py-3">No</th>
-              <th className="px-6 py-3">Username</th>
-              <th className="px-6 py-3">Password</th>
-              <th className="px-6 py-3">Full Name</th>
-              <th className="px-6 py-3">Action</th>
+              <th className="p-3 border-r border-red-700">No</th>
+              <th className="p-3 border-r border-red-700 w-1/6">Username</th>
+              <th className="p-3 border-r border-red-700 w-1/6">Password</th>
+              <th className="p-3 border-r border-red-700 w-1/3">Full Name</th>
+              <th className="p-3">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {loading // Skeleton loading ketika data belum muncul
-              ? [...Array(itemsPerPage)].map((_, index) => (
-                  <tr
-                    key={index}
-                    className="border-b hover:bg-gray-50 transition-colors"
-                  >
-                    <td className="px-6 py-4">
-                      <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
-                    </td>
-                    <td className="px-6 py-4 flex gap-2">
-                      <div className="h-8 w-20 bg-gray-200 rounded animate-pulse"></div>
-                      <div className="h-8 w-20 bg-gray-200 rounded animate-pulse"></div>
-                    </td>
-                  </tr>
-                ))
-              : currentUsers.map((user, index) => (
-                  <tr
-                    key={user.id}
-                    className="border-b hover:bg-gray-50 transition-colors"
-                  >
-                    <td className="px-6 py-4">
-                      {indexOfFirstItem + index + 1}
-                    </td>
-                    <td className="px-6 py-4">{user.username}</td>
-                    <td className="px-6 py-4 flex items-center">
-                      {showPassword[user.id] ? user.password : "*****"}
-                      <button
-                        className="ml-2 text-gray-500 hover:text-gray-700"
-                        onClick={() =>
-                          setShowPassword((prev) => ({
-                            ...prev,
-                            [user.id]: !prev[user.id],
-                          }))
-                        }
-                      >
-                        {showPassword[user.id] ? <FaEyeSlash /> : <FaEye />}
+            {loading ? (
+              [...Array(itemsPerPage)].map((_, index) => (
+                <tr key={index} className="animate-pulse bg-red-50">
+                  <td className="p-3 text-center border-r border-red-200">
+                    <div className="h-4 bg-red-300 rounded w-10 mx-auto"></div>
+                  </td>
+                  <td className="p-3 border-r border-red-200">
+                    <div className="h-4 bg-red-300 rounded w-full"></div>
+                  </td>
+                  <td className="p-3 border-r border-red-200">
+                    <div className="h-4 bg-red-300 rounded w-full"></div>
+                  </td>
+                  <td className="p-3 border-r border-red-200">
+                    <div className="h-4 bg-red-300 rounded w-full"></div>
+                  </td>
+                  <td className="p-3 flex items-center justify-center gap-3">
+                    <div className="w-16 h-8 bg-yellow-300 rounded"></div>
+                    <div className="w-16 h-8 bg-red-300 rounded"></div>
+                  </td>
+                </tr>
+              ))
+            ) : currentUsers.length > 0 ? (
+              currentUsers.map((user, index) => (
+                <tr key={user.id} className="hover:bg-red-50 transition-colors">
+                  <td className="p-3 text-center border-r border-red-200">
+                    {indexOfFirstItem + index + 1}
+                  </td>
+                  <td className="p-3 border-r border-red-200">
+                    {user.username}
+                  </td>
+                  <td className="p-3 border-r border-red-200 flex items-center">
+                    {showPassword[user.id] ? user.password : "*****"}
+                    <button
+                      className="ml-2 text-gray-500 hover:text-gray-700"
+                      onClick={() =>
+                        setShowPassword((prev) => ({
+                          ...prev,
+                          [user.id]: !prev[user.id],
+                        }))
+                      }
+                    >
+                      {showPassword[user.id] ? <FaEyeSlash /> : <FaEye />}
+                    </button>
+                  </td>
+                  <td className="p-3 border-r border-red-200">
+                    {user.full_name}
+                  </td>
+                  <td className="p-3 flex items-center justify-center gap-3">
+                    <button
+                      className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition-colors focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
+                      onClick={() => setSelectedUser(user)}
+                    >
+                      Lihat Detail
+                    </button>
+                    {localStorage.getItem("id_admin") == 1 && (
+                      <button className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+                        Hapus Pengguna
                       </button>
-                    </td>
-                    <td className="px-6 py-4">{user.full_name}</td>
-                    <td className="px-6 py-4 flex gap-2">
-                      <button
-                        className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600 transition-colors"
-                        onClick={() => setSelectedUser(user)}
-                      >
-                        Lihat Detail
-                      </button>
-                      {localStorage.getItem("id_admin") == 1 && (
-                        <button className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 transition-colors">
-                          Hapus Pengguna
-                        </button>
-                      )}
-                    </td>
-                  </tr>
-                ))}
+                    )}
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="5" className="text-center p-6">
+                  <div className="flex flex-col items-center justify-center text-red-600">
+                    <FaExclamationCircle className="text-6xl mb-2" />
+                    <p className="text-xl font-semibold">No Users Found</p>
+                    <p className="text-sm text-gray-500">
+                      Try adjusting your search criteria.
+                    </p>
+                  </div>
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
 
       {/* Pagination */}
-      <div className="flex justify-between items-center mt-6">
-        <div>
-          <label className="mr-2 text-gray-700">Rows per page:</label>
-          <select
-            value={itemsPerPage}
-            onChange={(e) => setItemsPerPage(Number(e.target.value))}
-            className="border p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
-          >
-            <option value={5}>5</option>
-            <option value={10}>10</option>
-            <option value={filteredUsers.length}>All</option>
-          </select>
-        </div>
-        <div className="flex gap-2">
-          {[...Array(totalPages)].map((_, i) => (
+      <div className="flex justify-between items-center mt-6 p-4 bg-red-50 rounded-lg shadow-sm">
+        {/* Dropdown untuk jumlah item per halaman */}
+        <select
+          value={itemsPerPage}
+          onChange={(e) => setItemsPerPage(Number(e.target.value))}
+          className="cursor-pointer border border-red-200 p-2 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-500 focus:outline-none transition-colors"
+        >
+          <option value={5}>5 per page</option>
+          <option value={10}>10 per page</option>
+          <option value={filteredUsers.length}>Show All</option>
+        </select>
+
+        {/* Pagination */}
+        <div className="flex space-x-2">
+          {Array.from({ length: totalPages }, (_, i) => (
             <button
               key={i}
-              className={`px-3 py-1 border rounded transition-colors ${
-                currentPage === i + 1
-                  ? "bg-red-500 text-white"
-                  : "bg-white text-gray-700 hover:bg-gray-100"
-              }`}
               onClick={() => setCurrentPage(i + 1)}
+              className={`px-4 py-2 border border-red-200 rounded-lg transition-colors cursor-pointer ${
+                currentPage === i + 1
+                  ? "bg-red-600 text-white hover:bg-red-700"
+                  : "bg-white text-red-600 hover:bg-red-50"
+              }`}
             >
               {i + 1}
             </button>
