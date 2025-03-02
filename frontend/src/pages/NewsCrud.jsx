@@ -1,7 +1,7 @@
-import { useState, useContext } from "react";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import { useState, useContext, useEffect } from "react";
 import { AllContext } from "../App";
 import { api } from "../utils";
+import { FaExclamationCircle } from "react-icons/fa";
 
 export default function NewsCrud() {
   const { news } = useContext(AllContext);
@@ -10,6 +10,7 @@ export default function NewsCrud() {
   const [selectedNews, setSelectedNews] = useState(null);
   const [perPage, setPerPage] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true);
   const defaultImage =
     "https://signfix.com.au/wp-content/uploads/2017/09/placeholder-600x400.png";
 
@@ -17,6 +18,14 @@ export default function NewsCrud() {
     setSelectedNews(newsItem);
     setModalOpen(true);
   };
+
+  useEffect(() => {
+    if (news?.length > 0) {
+      setPerPage(5);
+      setCurrentPage(1);
+      setLoading(false);
+    }
+  }, [news]);
 
   const filteredNews = news.filter(
     (item) =>
@@ -31,110 +40,146 @@ export default function NewsCrud() {
 
   return (
     <div className="p-4">
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between items-center mb-6 bg-red-100 p-4 rounded-lg shadow-md">
         <button
           onClick={() => handleOpenModal()}
-          className="bg-blue-500 text-white px-4 py-2 rounded"
+          className="bg-red-600 hover:bg-red-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition cursor-pointer"
         >
-          Tambah Berita
+          + Add News
         </button>
         <input
           type="text"
-          placeholder="Cari berita..."
+          placeholder="Search news..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="border p-2 rounded w-1/3"
+          className="border border-red-400 focus:ring-2 focus:ring-red-500 focus:outline-none p-2 rounded-lg w-1/3 shadow-sm transition"
         />
       </div>
 
-      <table className="w-full text-left border border-gray-400">
-        <thead className="text-center">
-          <tr className="bg-gray-100 border-b border-gray-400">
-            <th className="p-2 w- border-r border-gray-400">No</th>
-            <th className="p-2 w-1/4 border-r border-gray-400">Title</th>
-            <th className="p-2 w-1/6 border-r border-gray-400">Image</th>
-            <th className="p-2 w-1/3 border-r border-gray-400">Content</th>
-            <th className="p-2 w-20 text-center border-gray-400">Aksi</th>
-          </tr>
-        </thead>
-        <tbody>
-          {paginatedNews.length > 0 ? (
-            paginatedNews.map((item, index) => (
-              <tr key={item.id} className="border-b border-gray-400">
-                <td className="p-2 text-center border-r border-gray-400">
-                  {(currentPage - 1) * perPage + index + 1}
-                </td>
-                <td className="p-2 border-r border-gray-400 break-words">
-                  {item.title}
-                </td>
-                <td className="flex justify-center border-r border-gray-400">
-                  <img
-                    src={item.image_url || defaultImage}
-                    alt={item.title}
-                    className="w-40 rounded"
-                  />
-                </td>
-                <td className="p-2 border-r border-gray-400">
-                  {item.content.length > 100
-                    ? item.content.substring(0, 100) + "..."
-                    : item.content}
-                </td>
-                <td className="p-2 flex justify-center gap-2 border-gray-400">
-                  <button
-                    onClick={() => handleOpenModal(item)}
-                    className="text-yellow-500"
-                  >
-                    <FaEdit />
-                  </button>
-                  <button
-                    onClick={() => {
-                      if (
-                        confirm(
-                          `Apakah anda yakin ingin menghapus berita ${item.title}`
-                        )
-                      ) {
-                        api
-                          .delete(`/new/delete-by-id/${item.id}`)
-                          .then(async (res) => alert(res.message))
-                          .catch((e) => console.log(e));
-                      }
-                    }}
-                    className="text-red-500"
-                  >
-                    <FaTrash />
-                  </button>
+      <div className="overflow-x-auto">
+        <table className="w-full text-left border border-red-600 rounded-lg overflow-hidden">
+          <thead className="text-center bg-red-600 text-white">
+            <tr>
+              <th className="p-3 border-r border-red-700">No</th>
+              <th className="p-3 border-r border-red-700 w-1/4">Title</th>
+              <th className="p-3 border-r border-red-700 w-1/6">Image</th>
+              <th className="p-3 border-r border-red-700 w-1/3">Content</th>
+              <th className="p-3">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {loading ? (
+              // Skeleton Loader
+              [...Array(5)].map((_, index) => (
+                <tr key={index} className="animate-pulse bg-red-50">
+                  <td className="p-3 text-center border-r border-red-200">
+                    <div className="h-4 bg-red-300 rounded w-10 mx-auto"></div>
+                  </td>
+                  <td className="p-3 border-r border-red-200">
+                    <div className="h-4 bg-red-300 rounded w-3/4"></div>
+                  </td>
+                  <td className="p-3 border-r border-red-200 flex justify-center">
+                    <div className="w-40 h-24 bg-red-300 rounded-lg"></div>
+                  </td>
+                  <td className="p-3 border-r border-red-200">
+                    <div className="h-4 bg-red-300 rounded w-full mb-2"></div>
+                    <div className="h-4 bg-red-300 rounded w-2/3"></div>
+                  </td>
+                  <td className="p-3 flex items-center justify-center gap-3">
+                    <div className="w-16 h-8 bg-yellow-300 rounded"></div>
+                    <div className="w-16 h-8 bg-red-300 rounded"></div>
+                  </td>
+                </tr>
+              ))
+            ) : paginatedNews.length > 0 ? (
+              paginatedNews.map((item, index) => (
+                <tr key={item.id} className="hover:bg-red-50 transition-colors">
+                  <td className="p-3 text-center border-r border-red-200">
+                    {(currentPage - 1) * perPage + index + 1}
+                  </td>
+                  <td className="p-3 border-r border-red-200 break-words">
+                    {item.title}
+                  </td>
+                  <td className="p-3 border-r border-red-200 flex justify-center">
+                    <img
+                      src={item.image_url || defaultImage}
+                      alt={item.title}
+                      className="w-40 h-24 object-cover rounded-lg shadow-sm"
+                    />
+                  </td>
+                  <td className="p-3 border-r border-red-200">
+                    {item.content.length > 100
+                      ? item.content.substring(0, 100) + "..."
+                      : item.content}
+                  </td>
+                  <td className="p-3 h-full flex items-center justify-center gap-3">
+                    <button
+                      onClick={() => handleOpenModal(item)}
+                      className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition-colors focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => {
+                        if (
+                          confirm(
+                            `Are you sure you want to delete the news "${item.title}"?`
+                          )
+                        ) {
+                          api
+                            .delete(`/new/delete-by-id/${item.id}`)
+                            .then(async (res) => alert(res.message))
+                            .catch((e) => console.log(e));
+                        }
+                      }}
+                      className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="5" className="text-center p-6">
+                  <div className="flex flex-col items-center justify-center text-red-600">
+                    <FaExclamationCircle className="text-6xl mb-2" />
+                    <p className="text-xl font-semibold">No Data Found</p>
+                    <p className="text-sm text-gray-500">
+                      Try adding new data or check your filters.
+                    </p>
+                  </div>
                 </td>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="5" className="text-center p-4">
-                Data tidak ditemukan
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            )}
+          </tbody>
+        </table>
+      </div>
 
-      <div className="flex justify-between items-center mt-4">
+      <div className="flex justify-between items-center mt-6 p-4 bg-red-50 rounded-lg shadow-sm">
+        {/* Dropdown untuk jumlah item per halaman */}
         <select
           value={perPage}
           onChange={(e) => setPerPage(Number(e.target.value))}
-          className="border p-2 rounded"
+          className="cursor-pointer border border-red-200 p-2 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-500 focus:outline-none transition-colors"
         >
-          <option value={5}>5</option>
-          <option value={10}>10</option>
-          <option value={filteredNews.length}>All</option>
+          <option value={5}>5 per page</option>
+          <option value={10}>10 per page</option>
+          <option value={filteredNews.length}>Show All</option>
         </select>
-        <div>
+
+        {/* Pagination */}
+        <div className="flex space-x-2">
           {Array.from(
             { length: Math.ceil(filteredNews.length / perPage) },
             (_, i) => (
               <button
                 key={i}
                 onClick={() => setCurrentPage(i + 1)}
-                className={`mx-1 px-3 py-1 border rounded ${
-                  currentPage === i + 1 ? "bg-blue-500 text-white" : ""
+                className={`px-4 py-2 border border-red-200 rounded-lg transition-colors cursor-pointer ${
+                  currentPage === i + 1
+                    ? "bg-red-600 text-white hover:bg-red-700"
+                    : "bg-white text-red-600 hover:bg-red-50"
                 }`}
               >
                 {i + 1}
