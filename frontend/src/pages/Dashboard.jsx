@@ -82,9 +82,6 @@ function Dashboard() {
 
   return (
     <div className="min-h-[80vh] p-6 mx-auto max-w-6xl">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
-        Dashboard Admin
-      </h1>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* News Card */}
         <div className="bg-white p-5 rounded-lg shadow-lg border-b-4 border-red-500 transition transform hover:scale-105">
@@ -104,9 +101,9 @@ function Dashboard() {
         </div>
 
         {/* Users Card */}
-        <div className="bg-white p-5 rounded-lg shadow-lg border-b-4 border-blue-500 transition transform hover:scale-105">
+        <div className="bg-white p-5 rounded-lg shadow-lg border-b-4 border-yellow-500 transition transform hover:scale-105">
           <div className="flex items-center space-x-4">
-            <FaUsers className="text-blue-600 text-5xl" />
+            <FaUsers className="text-yellow-600 text-5xl" />
             <div>
               <p className="text-gray-600">Total Users</p>
               <h2 className="text-3xl font-bold">{stats.usersCount}</h2>
@@ -114,16 +111,16 @@ function Dashboard() {
           </div>
           <a
             href="/admin-users"
-            className="text-blue-500 text-sm mt-4 block hover:underline"
+            className="text-yellow-500 text-sm mt-4 block hover:underline"
           >
             Read More →
           </a>
         </div>
 
         {/* Gallery Card */}
-        <div className="bg-white p-5 rounded-lg shadow-lg border-b-4 border-green-500 transition transform hover:scale-105">
+        <div className="bg-white p-5 rounded-lg shadow-lg border-b-4 border-orange-500 transition transform hover:scale-105">
           <div className="flex items-center space-x-4">
-            <FaImages className="text-green-600 text-5xl" />
+            <FaImages className="text-orange-600 text-5xl" />
             <div>
               <p className="text-gray-600">Total Gallery</p>
               <h2 className="text-3xl font-bold">{stats.galleryCount}</h2>
@@ -131,7 +128,7 @@ function Dashboard() {
           </div>
           <a
             href="/admin-gallery"
-            className="text-green-500 text-sm mt-4 block hover:underline"
+            className="text-orange-500 text-sm mt-4 block hover:underline"
           >
             Read More →
           </a>
@@ -140,7 +137,9 @@ function Dashboard() {
 
       {/* Struktur Organisasi */}
       <div className="mt-8 p-6 bg-white rounded-lg shadow-lg text-center border border-gray-200">
-        <h2 className="text-xl font-bold mb-4">Struktur Organisasi</h2>
+        <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
+          Dashboard Admin
+        </h1>
         <div className="flex flex-col items-center gap-4">
           {/* Skeleton Loader */}
           {imageLoading && (
