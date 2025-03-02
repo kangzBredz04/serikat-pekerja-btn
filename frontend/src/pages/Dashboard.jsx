@@ -138,7 +138,7 @@ function Dashboard() {
       {/* Struktur Organisasi */}
       <div className="mt-8 p-6 bg-white rounded-lg shadow-lg text-center border border-gray-200">
         <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
-          Dashboard Admin
+          Struktur Organisasi
         </h1>
         <div className="flex flex-col items-center gap-4">
           {/* Skeleton Loader */}
@@ -168,7 +168,7 @@ function Dashboard() {
             {/* Tombol Pilih Gambar */}
             {!isImageSelected && (
               <button
-                className="px-4 py-2 bg-gray-300 text-gray-700 rounded cursor-pointer"
+                className="px-5 py-2 bg-red-600 text-white cursor-pointer rounded-full font-semibold"
                 onClick={() => document.getElementById("fileInput").click()}
               >
                 Ganti Gambar
@@ -185,14 +185,14 @@ function Dashboard() {
             {isImageSelected && (
               <>
                 <button
-                  className="px-4 py-2 bg-red-500 text-white rounded cursor-pointer"
+                  className="px-5 py-2 bg-yellow-500 text-white cursor-pointer rounded-full font-semibold"
                   onClick={() => window.location.reload()}
                 >
                   Batal Ganti
                 </button>
                 <button
                   onClick={handleUpload}
-                  className="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer"
+                  className="px-5 py-2 bg-red-600 text-white cursor-pointer rounded-full font-semibold"
                   disabled={loading}
                 >
                   {loading ? "Uploading..." : "Lanjut Ganti"}
