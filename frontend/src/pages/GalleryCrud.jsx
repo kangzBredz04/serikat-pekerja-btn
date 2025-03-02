@@ -4,6 +4,7 @@ import { MdImageNotSupported } from "react-icons/md";
 import { AllContext } from "../App";
 import { api } from "../utils";
 import { FaPlus } from "react-icons/fa6";
+import { FaExclamationCircle } from "react-icons/fa";
 
 function GalleryCrud() {
   const { gallery } = useContext(AllContext);
@@ -18,6 +19,8 @@ function GalleryCrud() {
   const [previewImage, setPreviewImage] = useState(null);
   const [isImageSelected, setIsImageSelected] = useState(false);
   const [image, setImage] = useState(null);
+  const [perPage, setPerPage] = useState(5);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     if (gallery?.length > 0) {
@@ -134,9 +137,13 @@ function GalleryCrud() {
     }
   };
 
+  const paginatedImages = filteredImages.slice(
+    (currentPage - 1) * perPage,
+    currentPage * perPage
+  );
+
   return (
     <div className="p-4  mx-auto">
-      <h1 className="text-2xl font-bold mb-4 text-center">Gallery</h1>
       <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
         {/* Search Input */}
         <input
@@ -169,103 +176,86 @@ function GalleryCrud() {
         </button>
       </div>
       <div className="overflow-x-auto">
-        <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-sm">
-          <thead className="bg-gray-50">
+        <table className="w-full text-left border border-red-600 rounded-lg overflow-hidden">
+          <thead className="text-center bg-red-600 text-white">
             <tr>
-              <th className="px-6 py-4 text-left text-sm font-medium text-gray-700 uppercase tracking-wider">
-                No
-              </th>
-              <th className="px-6 py-4 text-left text-sm font-medium text-gray-700 uppercase tracking-wider">
-                Image
-              </th>
-              <th className="px-6 py-4 text-left text-sm font-medium text-gray-700 uppercase tracking-wider">
-                Description
-              </th>
-              <th className="px-6 py-4 text-left text-sm font-medium text-gray-700 uppercase tracking-wider">
-                Actions
-              </th>
+              <th className="p-3 border-r border-red-700">No</th>
+              <th className="p-3 border-r border-red-700 w-1/6">Image</th>
+              <th className="p-3 border-r border-red-700 w-1/3">Description</th>
+              <th className="p-3">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200">
+          <tbody>
             {loading ? (
-              // Skeleton Loading while data is being fetched
-              Array.from({ length: 5 }).map((_, index) => (
-                <tr key={index}>
-                  <td className="px-6 py-5">
-                    <div className="w-6 h-4 bg-gray-300 animate-pulse rounded"></div>
+              [...Array(5)].map((_, index) => (
+                <tr key={index} className="animate-pulse bg-red-50">
+                  <td className="p-3 text-center border-r border-red-200">
+                    <div className="h-4 bg-red-300 rounded w-10 mx-auto"></div>
                   </td>
-                  <td className="px-6 py-5">
-                    <div className="w-32 h-24 bg-gray-300 animate-pulse rounded-lg"></div>
+                  <td className="p-3 border-r border-red-200 flex justify-center">
+                    <div className="w-40 h-24 bg-red-300 rounded-lg"></div>
                   </td>
-                  <td className="px-6 py-5">
-                    <div className="w-48 h-4 bg-gray-300 animate-pulse rounded"></div>
+                  <td className="p-3 border-r border-red-200">
+                    <div className="h-4 bg-red-300 rounded w-full mb-2"></div>
+                    <div className="h-4 bg-red-300 rounded w-2/3"></div>
                   </td>
-                  <td className="px-6 py-5">
-                    <div className="flex gap-3">
-                      <div className="w-16 h-8 bg-gray-300 animate-pulse rounded"></div>
-                      <div className="w-16 h-8 bg-gray-300 animate-pulse rounded"></div>
-                    </div>
+                  <td className="p-3 flex items-center justify-center gap-3">
+                    <div className="w-16 h-8 bg-yellow-300 rounded"></div>
+                    <div className="w-16 h-8 bg-red-300 rounded"></div>
                   </td>
                 </tr>
               ))
-            ) : filteredImages.length > 0 ? (
-              // Display image data
-              filteredImages.map((image, index) => (
+            ) : paginatedImages.length > 0 ? (
+              paginatedImages.map((image, index) => (
                 <tr
                   key={image.id}
-                  className="hover:bg-gray-50 transition-colors"
+                  className="hover:bg-red-50 transition-colors"
                 >
-                  <td className="px-6 py-5 text-sm text-gray-700">
-                    {index + 1}
+                  <td className="p-3 text-center border-r border-red-200">
+                    {(currentPage - 1) * perPage + index + 1}
                   </td>
-                  <td className="px-6 py-5">
+                  <td className="p-3 border-r border-red-200 flex justify-center">
                     <img
                       src={image.image}
                       alt={image.description}
-                      className="w-32 h-24 object-cover rounded-lg"
+                      className="w-40 h-24 object-cover rounded-lg shadow-sm"
                     />
                   </td>
-                  <td className="px-6 py-5 text-sm text-gray-700 max-w-xs">
+                  <td className="p-3 border-r border-red-200">
                     {image.description}
                   </td>
-                  <td className="px-6 py-5">
-                    <div className="flex gap-3 *:cursor-pointer">
-                      <button
-                        onClick={() => {
-                          setCurrentImage(image);
-                          setImage(image);
-                          setShowModal(true);
-                          setPreviewImage(image.image);
-                          setNewImage({
-                            id: image.id,
-                            description: image.description,
-                          });
-                        }}
-                        className="bg-yellow-500 hover:bg-yellow-600 text-white text-sm font-semibold py-2 px-4 rounded transition-colors duration-200"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDelete(image.id)}
-                        className="bg-red-500 hover:bg-red-600 text-white text-sm font-semibold py-2 px-4 rounded transition-colors duration-200"
-                      >
-                        Delete
-                      </button>
-                    </div>
+                  <td className="p-3 flex items-center justify-center gap-3">
+                    <button
+                      onClick={() => {
+                        setCurrentImage(image);
+                        setImage(image);
+                        setShowModal(true);
+                        setPreviewImage(image.image);
+                        setNewImage({
+                          id: image.id,
+                          description: image.description,
+                        });
+                      }}
+                      className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition-colors focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete(image.id)}
+                      className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                    >
+                      Delete
+                    </button>
                   </td>
                 </tr>
               ))
             ) : (
-              // Display message if no images are found
               <tr>
-                <td colSpan={4} className="px-6 py-8 text-center">
-                  <div className="flex flex-col items-center justify-center text-gray-500">
-                    <MdImageNotSupported
-                      size={64}
-                      className="text-gray-400 mb-4"
-                    />
-                    <p className="text-xl font-semibold">No images found</p>
-                    <p className="text-sm text-gray-600 mt-1">
+                <td colSpan="4" className="text-center p-6">
+                  <div className="flex flex-col items-center justify-center text-red-600">
+                    <FaExclamationCircle className="text-6xl mb-2" />
+                    <p className="text-xl font-semibold">No Images Found</p>
+                    <p className="text-sm text-gray-500">
                       Try adjusting your search criteria.
                     </p>
                   </div>
@@ -274,6 +264,39 @@ function GalleryCrud() {
             )}
           </tbody>
         </table>
+      </div>
+
+      <div className="flex justify-between items-center mt-6 p-4 bg-red-50 rounded-lg shadow-sm">
+        {/* Dropdown untuk jumlah item per halaman */}
+        <select
+          value={perPage}
+          onChange={(e) => setPerPage(Number(e.target.value))}
+          className="cursor-pointer border border-red-200 p-2 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-500 focus:outline-none transition-colors"
+        >
+          <option value={5}>5 per page</option>
+          <option value={10}>10 per page</option>
+          <option value={filteredImages.length}>Show All</option>
+        </select>
+
+        {/* Pagination */}
+        <div className="flex space-x-2">
+          {Array.from(
+            { length: Math.ceil(filteredImages.length / perPage) },
+            (_, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrentPage(i + 1)}
+                className={`px-4 py-2 border border-red-200 rounded-lg transition-colors cursor-pointer ${
+                  currentPage === i + 1
+                    ? "bg-red-600 text-white hover:bg-red-700"
+                    : "bg-white text-red-600 hover:bg-red-50"
+                }`}
+              >
+                {i + 1}
+              </button>
+            )
+          )}
+        </div>
       </div>
 
       {showModal && (
