@@ -1,7 +1,7 @@
 import { useState, useContext, useEffect } from "react";
 import { AllContext } from "../App";
 import { api } from "../utils";
-import { FaExclamationCircle } from "react-icons/fa";
+import { FaEdit, FaExclamationCircle, FaImage } from "react-icons/fa";
 
 export default function NewsCrud() {
   const { news } = useContext(AllContext);
@@ -190,37 +190,117 @@ export default function NewsCrud() {
       </div>
 
       {modalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-6 rounded w-1/2">
-            <h2 className="text-lg font-bold mb-4">
-              {selectedNews ? "Edit Berita" : "Tambah Berita"}
-            </h2>
-            <input
-              type="text"
-              placeholder="Title"
-              value={selectedNews?.title || ""}
-              className="border p-2 w-full mb-2"
-            />
-            <input
-              type="text"
-              placeholder="Image URL"
-              value={selectedNews?.image_url || ""}
-              className="border p-2 w-full mb-2"
-            />
-            <textarea
-              placeholder="Content"
-              value={selectedNews?.content || ""}
-              className="border p-2 w-full mb-2"
-            ></textarea>
-            <button className="bg-blue-500 text-white px-4 py-2 rounded">
-              Simpan
-            </button>
-            <button
-              onClick={() => setModalOpen(false)}
-              className="bg-gray-500 text-white px-4 py-2 rounded ml-2"
-            >
-              Tutup
-            </button>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-start pt-29 overflow-y-auto">
+          <div className="bg-white p-6 rounded-lg w-11/12 md:w-1/2 lg:w-1/3 shadow-2xl transform transition-all duration-300 ease-in-out">
+            {/* Judul Modal dengan Icon */}
+            <div className="flex items-center space-x-3 mb-6">
+              <FaEdit className="h-6 w-6 text-red-500" />{" "}
+              {/* Ikon dari React Icons */}
+              <h2 className="text-2xl font-bold text-gray-800">
+                {selectedNews ? "Edit Berita" : "Tambah Berita"}
+              </h2>
+            </div>
+
+            {/* Form Input */}
+            <div className="space-y-4">
+              {/* Input Judul */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Judul Berita
+                </label>
+                <input
+                  type="text"
+                  placeholder="Masukkan judul berita"
+                  value={selectedNews?.title || ""}
+                  onChange={(e) =>
+                    setSelectedNews({ ...selectedNews, title: e.target.value })
+                  }
+                  className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-colors"
+                />
+              </div>
+
+              {/* Input Gambar */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Gambar Berita
+                </label>
+                <div className="flex items-center space-x-4">
+                  <label className="flex flex-col items-center justify-center w-full p-3 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-red-500 transition-colors">
+                    <FaImage className="h-6 w-6 text-gray-400" />{" "}
+                    {/* Ikon dari React Icons */}
+                    <span className="mt-2 text-sm text-gray-500">
+                      {selectedNews?.image_url
+                        ? "Ganti Gambar"
+                        : "Pilih Gambar"}
+                    </span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          const reader = new FileReader();
+                          reader.onloadend = () => {
+                            setSelectedNews({
+                              ...selectedNews,
+                              // image_url: reader.result as string,
+                            });
+                          };
+                          reader.readAsDataURL(file);
+                        }
+                      }}
+                      className="hidden"
+                    />
+                  </label>
+                  {selectedNews?.image_url && (
+                    <img
+                      src={selectedNews.image_url}
+                      alt="Preview"
+                      className="w-16 h-16 object-cover rounded-lg"
+                    />
+                  )}
+                </div>
+              </div>
+
+              {/* Input Konten */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Konten Berita
+                </label>
+                <textarea
+                  placeholder="Masukkan konten berita"
+                  value={selectedNews?.content || ""}
+                  onChange={(e) =>
+                    setSelectedNews({
+                      ...selectedNews,
+                      content: e.target.value,
+                    })
+                  }
+                  className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-colors"
+                  rows={4}
+                ></textarea>
+              </div>
+            </div>
+
+            {/* Tombol Aksi */}
+            <div className="flex justify-end space-x-4 mt-6">
+              <button
+                onClick={() => setModalOpen(false)}
+                className="cursor-pointer px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors flex items-center"
+              >
+                Batal
+              </button>
+              <button
+                onClick={() => {
+                  // Logika simpan data
+                  console.log("Data disimpan:", selectedNews);
+                  setModalOpen(false);
+                }}
+                className="cursor-pointer px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:from-red-600 hover:to-red-700 transition-all flex items-center"
+              >
+                Simpan
+              </button>
+            </div>
           </div>
         </div>
       )}
