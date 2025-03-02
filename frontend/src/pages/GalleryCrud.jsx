@@ -144,37 +144,38 @@ function GalleryCrud() {
 
   return (
     <div className="p-4  mx-auto">
-      <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-        {/* Search Input */}
-        <input
-          type="text"
-          placeholder="Search by description..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full md:w-64 transition-all"
-        />
-
-        {/* Sort Dropdown */}
-        <select
-          onChange={(e) => setSortOrder(e.target.value)}
-          className="p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 cursor-pointer transition-all"
-        >
-          <option value="newest">Newest First</option>
-          <option value="oldest">Oldest First</option>
-        </select>
-
-        {/* Add Image Button */}
+      <div className="flex justify-between items-center mb-6 bg-red-100 p-4 rounded-lg shadow-md">
+        {/* Add Image Button (Left) */}
         <button
           onClick={() => {
             setCurrentImage(null);
             setShowModal(true);
           }}
-          className="cursor-pointer bg-blue-500 hover:bg-blue-600 text-white p-3 rounded-lg shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 w-full md:w-auto"
+          className="bg-red-600 hover:bg-red-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition cursor-pointer"
         >
-          <FaPlus />
-          <span>Add Image</span>
+          + Add Image
         </button>
+
+        {/* Search & Sort (Right) */}
+        <div className="flex items-center gap-3">
+          <input
+            type="text"
+            placeholder="Search by description..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="border border-red-400 focus:ring-2 focus:ring-red-500 focus:outline-none p-2 rounded-lg w-48 shadow-sm transition"
+          />
+
+          <select
+            onChange={(e) => setSortOrder(e.target.value)}
+            className="border border-red-400 focus:ring-2 focus:ring-red-500 focus:outline-none p-2 rounded-lg shadow-sm transition cursor-pointer"
+          >
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
+          </select>
+        </div>
       </div>
+
       <div className="overflow-x-auto">
         <table className="w-full text-left border border-red-600 rounded-lg overflow-hidden">
           <thead className="text-center bg-red-600 text-white">
@@ -326,7 +327,7 @@ function GalleryCrud() {
                   type="file"
                   onChange={handleImageChange}
                   accept="image/*"
-                  className="cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition duration-200 ease-in-out w-full text-gray-500 focus:outline-none"
+                  className="cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-red-600 hover:file:bg-red-100 transition duration-200 ease-in-out w-full text-gray-500 focus:outline-none"
                 />
               </div>
 
@@ -342,7 +343,7 @@ function GalleryCrud() {
                   onChange={(e) =>
                     setNewImage({ ...newImage, description: e.target.value })
                   }
-                  className="p-3 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-400"
+                  className="p-3 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent placeholder-gray-400"
                 />
               </div>
             </div>
@@ -357,13 +358,13 @@ function GalleryCrud() {
                   setIsImageSelected(false);
                   setNewImage({ description: "" });
                 }}
-                className="cursor-pointer bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                className="cursor-pointer bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
               >
                 Cancel
               </button>
               <button
                 onClick={handleUpload}
-                className="cursor-pointer bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                className="cursor-pointer bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
               >
                 {currentImage ? "Save Changes" : "Add Image"}
               </button>
@@ -371,30 +372,6 @@ function GalleryCrud() {
           </div>
         </div>
       )}
-
-      {/* Modal untuk menampilkan gambar */}
-      {/* {showModal && currentImage && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 z-50 p-4">
-          <div className="bg-white p-4 sm:p-6 rounded-lg max-w-[90vw] max-h-[80vh] overflow-auto">
-            <img
-              src={currentImage.image}
-              alt={currentImage.description}
-              className="w-full h-auto rounded-lg"
-            />
-            <div className="mt-4 text-center">
-              <p className="text-sm sm:text-lg font-semibold">
-                {currentImage.description}
-              </p>
-              <button
-                onClick={() => setShowModal(false)}
-                className="mt-4 bg-gray-500 hover:bg-gray-600 text-white text-sm sm:text-base font-semibold py-2 px-3 sm:py-2 sm:px-4 rounded transition-colors duration-200"
-              >
-                Tutup
-              </button>
-            </div>
-          </div>
-        </div>
-      )} */}
     </div>
   );
 }
