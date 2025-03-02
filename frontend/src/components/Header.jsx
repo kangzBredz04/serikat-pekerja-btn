@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { FaBars, FaTimes, FaUser } from "react-icons/fa";
 
@@ -7,6 +7,7 @@ function Header() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [username, setUsername] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
     const adminId = localStorage.getItem("id_admin");
@@ -15,6 +16,16 @@ function Header() {
       setIsAdmin(true);
       setUsername(storedUsername || "Admin");
     }
+
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
 
   const handleLogout = () => {
@@ -85,20 +96,20 @@ function Header() {
       </nav>
 
       {/* User Dropdown or Sign In Button */}
-      <div className="relative hidden md:block">
+      <div className="relative hidden md:block" ref={dropdownRef}>
         {isAdmin ? (
           <div className="relative">
             <button
-              className="flex items-center bg-red-600 text-white px-6 py-2 rounded-full font-semibold shadow-md hover:bg-red-800 cursor-pointer"
+              className="flex items-center bg-red-600 text-white px-6 py-2 rounded-full font-semibold shadow-md hover:bg-red-800 cursor-pointer transition-all duration-300"
               onClick={() => setDropdownOpen(!dropdownOpen)}
             >
               <FaUser className="mr-2" /> {username}
             </button>
             {dropdownOpen && (
-              <div className="absolute right-0 mt-2 w-40 bg-white border rounded-md shadow-lg py-2">
+              <div className="absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg py-2 transition-opacity duration-300 ease-in-out transform scale-95 animate-fadeIn">
                 <button
                   onClick={handleLogout}
-                  className="w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100 cursor-pointer"
+                  className="w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100 cursor-pointer transition-colors duration-200"
                 >
                   Logout
                 </button>
@@ -108,7 +119,7 @@ function Header() {
         ) : (
           <Link
             to="/login"
-            className="bg-red-600 text-white px-6 py-2 rounded-full font-semibold shadow-md hover:bg-red-800 cursor-pointer"
+            className="bg-red-600 text-white px-6 py-2 rounded-full font-semibold shadow-md hover:bg-red-800 cursor-pointer transition-all duration-300"
           >
             Sign In
           </Link>
