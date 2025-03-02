@@ -100,23 +100,6 @@ function Dashboard() {
           </a>
         </div>
 
-        {/* Users Card */}
-        <div className="bg-white p-5 rounded-lg shadow-lg border-b-4 border-yellow-500 transition transform hover:scale-105">
-          <div className="flex items-center space-x-4">
-            <FaUsers className="text-yellow-600 text-5xl" />
-            <div>
-              <p className="text-gray-600">Total Users</p>
-              <h2 className="text-3xl font-bold">{stats.usersCount}</h2>
-            </div>
-          </div>
-          <a
-            href="/admin-users"
-            className="text-yellow-500 text-sm mt-4 block hover:underline"
-          >
-            Read More →
-          </a>
-        </div>
-
         {/* Gallery Card */}
         <div className="bg-white p-5 rounded-lg shadow-lg border-b-4 border-orange-500 transition transform hover:scale-105">
           <div className="flex items-center space-x-4">
@@ -133,12 +116,29 @@ function Dashboard() {
             Read More →
           </a>
         </div>
+
+        {/* Users Card */}
+        <div className="bg-white p-5 rounded-lg shadow-lg border-b-4 border-yellow-500 transition transform hover:scale-105">
+          <div className="flex items-center space-x-4">
+            <FaUsers className="text-yellow-600 text-5xl" />
+            <div>
+              <p className="text-gray-600">Total Users</p>
+              <h2 className="text-3xl font-bold">{stats.usersCount}</h2>
+            </div>
+          </div>
+          <a
+            href="/admin-users"
+            className="text-yellow-500 text-sm mt-4 block hover:underline"
+          >
+            Read More →
+          </a>
+        </div>
       </div>
 
       {/* Struktur Organisasi */}
       <div className="mt-8 p-6 bg-white rounded-lg shadow-lg text-center border border-gray-200">
         <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
-          Struktur Organisasi
+          Organizational Structure
         </h1>
         <div className="flex flex-col items-center gap-4">
           {/* Skeleton Loader */}
