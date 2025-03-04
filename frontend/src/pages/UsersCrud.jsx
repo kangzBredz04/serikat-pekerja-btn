@@ -57,20 +57,22 @@ function UsersCrud() {
     }
 
     api
-      .post("/auth/register", {
+      .post("/auth/add", {
         full_name: fullName,
         username: username,
         password: password,
       })
       .then((res) => {
         alert(res.msg);
-      });
-    // Reset form dan tutup modal
-    setFullName("");
-    setUsername("");
-    setPassword("");
-    setConfirmPassword("");
-    setShowModal(false);
+        // Reset form dan tutup modal
+        setFullName("");
+        setUsername("");
+        setPassword("");
+        setConfirmPassword("");
+        setShowModal(false);
+        window.location.href = "/admin-users";
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
