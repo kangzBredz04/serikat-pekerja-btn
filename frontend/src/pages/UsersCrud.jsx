@@ -3,7 +3,11 @@ import {
   FaExclamationCircle,
   FaEye,
   FaEyeSlash,
+  FaKey,
   FaSearch,
+  FaTimes,
+  FaUser,
+  FaUserCircle,
 } from "react-icons/fa";
 import { AllContext } from "../App";
 
@@ -115,7 +119,7 @@ function UsersCrud() {
                   <td className="p-3 border-r border-red-200">
                     {user.full_name}
                   </td>
-                  <td className="p-3 flex items-center justify-center gap-3">
+                  <td className="p-3 flex items-center justify-center gap-3 *:cursor-pointer">
                     <button
                       className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition-colors focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
                       onClick={() => setSelectedUser(user)}
@@ -181,30 +185,58 @@ function UsersCrud() {
       {/* Modal */}
       {selectedUser && (
         <div className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-md flex items-center justify-center p-6">
-          <div className="bg-white p-6 rounded-2xl w-96 shadow-2xl border border-gray-300 transform transition-all scale-100">
-            <div className="flex justify-between items-center border-b pb-3">
-              <h2 className="text-xl font-semibold text-gray-900">
-                User Details
-              </h2>
-            </div>
-            <div className="mt-4 space-y-3 text-gray-700">
-              <p>
-                <strong>Username:</strong> {selectedUser.username}
-              </p>
-              <p>
-                <strong>Password:</strong> {selectedUser.password}
-              </p>
-              <p>
-                <strong>Full Name:</strong> {selectedUser.full_name}
-              </p>
-            </div>
-            <div className="mt-5 flex justify-end">
+          <div className="bg-white p-8 rounded-2xl w-96 shadow-2xl border border-gray-200 transform transition-all scale-100">
+            {/* Header */}
+            <div className="flex justify-between items-center border-b pb-4">
+              <h2 className="text-2xl font-bold text-gray-800">User Details</h2>
               <button
                 onClick={() => setSelectedUser(null)}
-                className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition"
+                className="text-gray-500 hover:text-gray-700 transition cursor-pointer"
               >
-                Close
+                <FaTimes className="h-6 w-6" /> {/* Ikon close */}
               </button>
+            </div>
+
+            {/* User Details */}
+            <div className="mt-6 space-y-4">
+              <div className="flex items-center space-x-4">
+                <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                  <FaUser className="h-5 w-5 text-blue-600" />{" "}
+                  {/* Ikon username */}
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Username</p>
+                  <p className="font-semibold text-gray-800">
+                    {selectedUser.username}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center space-x-4">
+                <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                  <FaKey className="h-5 w-5 text-green-600" />{" "}
+                  {/* Ikon password */}
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Password</p>
+                  <p className="font-semibold text-gray-800">
+                    {selectedUser.password}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center space-x-4">
+                <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
+                  <FaUserCircle className="h-5 w-5 text-purple-600" />{" "}
+                  {/* Ikon full name */}
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Full Name</p>
+                  <p className="font-semibold text-gray-800">
+                    {selectedUser.full_name}
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
