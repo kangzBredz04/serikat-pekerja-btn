@@ -46,4 +46,19 @@ export const getAllAccount = async (req, res) => {
     } catch (error) {
         res.status(500).json({ msg: error.message })
     }
-} 
+}
+
+export const deleteAccount = async (req, res) => {
+    try {
+        if (req.params.id === "1") {
+            res.status(200).json({
+                msg: "Data admin utama tidak bisa dihapus.",
+            });
+        } else {
+            await pool.query("DELETE FROM users WHERE id = $1", [req.params.id]);
+            res.status(200).json({ msg: "User berhasil dihapus." });
+        }
+    } catch (error) {
+        res.status(500).json({ msg: error.message });
+    }
+};
