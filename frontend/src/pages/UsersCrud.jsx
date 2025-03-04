@@ -10,6 +10,7 @@ import {
   FaUserCircle,
 } from "react-icons/fa";
 import { AllContext } from "../App";
+import { api } from "../utils";
 
 function UsersCrud() {
   const { users } = useContext(AllContext);
@@ -19,6 +20,13 @@ function UsersCrud() {
   const [itemsPerPage, setItemsPerPage] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [fullName, setFullName] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword2, setShowPassword2] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   useEffect(() => {
     if (users?.length > 0) {
@@ -37,15 +45,41 @@ function UsersCrud() {
   const currentUsers = filteredUsers.slice(indexOfFirstItem, indexOfLastItem);
   const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
 
+  // Cek apakah user yang login adalah admin dengan id_admin = 1
+  const isAdmin = localStorage.getItem("id_admin") === "1";
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Validasi password dan confirm password
+    if (password !== confirmPassword) {
+      alert("Password dan Confirm Password tidak cocok!");
+      return;
+    }
+    // Lakukan sesuatu dengan data (misalnya, kirim ke API)
+    console.log({ fullName, username, password });
+    // Reset form dan tutup modal
+    setFullName("");
+    setUsername("");
+    setPassword("");
+    setConfirmPassword("");
+    setShowModal(false);
+  };
+
   return (
     <div className="p-4">
-      {/* Search Input */}
-      <div className="flex justify-between items-center mb-6 bg-red-100 p-4 rounded-lg shadow-md">
-        {/* Placeholder untuk tombol atau konten di sebelah kiri (bisa diisi nanti) */}
-        <div></div>
+      <div className="flex justify-between items-center mb-6 bg-red-100 p-4 rounded-lg shadow-md flex-col md:flex-row gap-4 md:gap-0">
+        {/* Tombol Tambah (Muncul hanya untuk admin) */}
+        {isAdmin && (
+          <button
+            onClick={() => setShowModal(true)}
+            className="bg-red-600 hover:bg-red-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition cursor-pointer w-full md:w-auto"
+          >
+            + Add User
+          </button>
+        )}
 
-        {/* Search Input (Right) */}
-        <div className="relative w-full max-w-md">
+        {/* Search Input */}
+        <div className="relative w-full md:max-w-md">
           <input
             type="text"
             placeholder="Search by username or full name..."
@@ -127,7 +161,26 @@ function UsersCrud() {
                       Lihat Detail
                     </button>
                     {localStorage.getItem("id_admin") == 1 && (
-                      <button className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+                      <button
+                        onClick={() => {
+                          if (
+                            confirm(
+                              `Apakah anda yakin ingin menghapus data atas username ${user.full_name}`
+                            )
+                          ) {
+                            api
+                              .delete(`/auth/delete/${user.id}`)
+                              .then(async (res) => {
+                                alert(res.msg);
+                                window.location.href = "/admin-users";
+                              })
+                              .catch((e) => {
+                                console.log(e);
+                              });
+                          }
+                        }}
+                        className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                      >
                         Hapus Pengguna
                       </button>
                     )}
@@ -238,6 +291,119 @@ function UsersCrud() {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Pop-up Form Tambah User */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-md flex items-center justify-center pt-14 px-4">
+          <div className="bg-white p-8 rounded-2xl w-96 shadow-2xl border border-gray-200 transform transition-all scale-100">
+            {/* Header Modal */}
+            <div className="flex justify-between items-center border-b pb-4">
+              <h2 className="text-2xl font-bold text-gray-800">Add New User</h2>
+              <button
+                onClick={() => setShowModal(false)}
+                className="text-gray-500 hover:text-gray-700 transition"
+              >
+                <FaTimes className="h-6 w-6" />
+              </button>
+            </div>
+
+            {/* Form Input */}
+            <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+              {/* Full Name */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Full Name
+                </label>
+                <input
+                  type="text"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  className="mt-1 border border-gray-300 focus:ring-2 focus:ring-red-500 focus:outline-none p-2 rounded-lg w-full shadow-sm transition"
+                  required
+                />
+              </div>
+
+              {/* Username */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Username
+                </label>
+                <input
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className="mt-1 border border-gray-300 focus:ring-2 focus:ring-red-500 focus:outline-none p-2 rounded-lg w-full shadow-sm transition"
+                  required
+                />
+              </div>
+
+              {/* Password */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Password
+                </label>
+                <div className="relative">
+                  <input
+                    type={showPassword2 ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="mt-1 border border-gray-300 focus:ring-2 focus:ring-red-500 focus:outline-none p-2 rounded-lg w-full shadow-sm transition"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword2(!showPassword2)}
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  >
+                    {showPassword2 ? (
+                      <FaEyeSlash className="text-gray-400" />
+                    ) : (
+                      <FaEye className="text-gray-400" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Confirm Password */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Confirm Password
+                </label>
+                <div className="relative">
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    className="mt-1 border border-gray-300 focus:ring-2 focus:ring-red-500 focus:outline-none p-2 rounded-lg w-full shadow-sm transition"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  >
+                    {showConfirmPassword ? (
+                      <FaEyeSlash className="text-gray-400" />
+                    ) : (
+                      <FaEye className="text-gray-400" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Submit Button */}
+              <div className="mt-6 flex justify-end">
+                <button
+                  type="submit"
+                  className="bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-2 rounded-lg shadow-md transition"
+                >
+                  Save
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
