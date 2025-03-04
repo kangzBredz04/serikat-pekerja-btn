@@ -62,3 +62,21 @@ export const deleteAccount = async (req, res) => {
         res.status(500).json({ msg: error.message });
     }
 };
+
+export const addAccount = async (req, res) => {
+    const { full_name, username, email, password } = req.body;
+    try {
+        const hashPassword = await argon2.hash(password);
+        const result = await pool.query(
+            "INSERT INTO users (full_name, username, email, password) VALUES ($1, $2, $3, $4) RETURNING *",
+            [full_name, username, email, hashPassword]
+        );
+        res.status(201).json({
+            msg: "Pendaftaran akun melalui admin telah berhasil",
+            data: result.rows[0],
+        });
+    } catch (error) {
+        // console.log(error);
+        res.status(500).json({ error });
+    }
+};
