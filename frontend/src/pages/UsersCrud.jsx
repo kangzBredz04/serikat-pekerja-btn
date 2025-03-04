@@ -55,8 +55,16 @@ function UsersCrud() {
       alert("Password dan Confirm Password tidak cocok!");
       return;
     }
-    // Lakukan sesuatu dengan data (misalnya, kirim ke API)
-    console.log({ fullName, username, password });
+
+    api
+      .post("/auth/register", {
+        full_name: fullName,
+        username: username,
+        password: password,
+      })
+      .then((res) => {
+        alert(res.msg);
+      });
     // Reset form dan tutup modal
     setFullName("");
     setUsername("");
