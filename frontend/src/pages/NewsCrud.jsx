@@ -40,19 +40,22 @@ export default function NewsCrud() {
 
   return (
     <div className="p-4">
-      <div className="flex justify-between items-center mb-6 bg-red-100 p-4 rounded-lg shadow-md">
+      <div className="flex justify-between items-center mb-6 bg-red-100 p-4 rounded-lg shadow-md flex-col md:flex-row gap-4 md:gap-0">
+        {/* Tombol Add News */}
         <button
-          onClick={() => handleOpenModal()}
-          className="bg-red-600 hover:bg-red-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition cursor-pointer"
+          onClick={handleOpenModal}
+          className="bg-red-600 hover:bg-red-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition cursor-pointer w-full md:w-auto"
         >
           + Add News
         </button>
+
+        {/* Search Input */}
         <input
           type="text"
           placeholder="Search news..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="border border-red-400 focus:ring-2 focus:ring-red-500 focus:outline-none p-2 rounded-lg w-1/3 shadow-sm transition"
+          className="border border-red-400 focus:ring-2 focus:ring-red-500 focus:outline-none p-2 rounded-lg w-full md:w-1/3 shadow-sm transition"
         />
       </div>
 

@@ -144,31 +144,31 @@ function GalleryCrud() {
 
   return (
     <div className="p-4  mx-auto">
-      <div className="flex justify-between items-center mb-6 bg-red-100 p-4 rounded-lg shadow-md">
+      <div className="flex flex-col md:flex-row justify-between items-center mb-6 bg-red-100 p-4 rounded-lg shadow-md gap-4 md:gap-0">
         {/* Add Image Button (Left) */}
         <button
           onClick={() => {
             setCurrentImage(null);
             setShowModal(true);
           }}
-          className="bg-red-600 hover:bg-red-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition cursor-pointer"
+          className="bg-red-600 hover:bg-red-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition cursor-pointer w-full md:w-auto"
         >
           + Add Image
         </button>
 
         {/* Search & Sort (Right) */}
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col md:flex-row items-center gap-3 w-full md:w-auto">
           <input
             type="text"
             placeholder="Search by description..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="border border-red-400 focus:ring-2 focus:ring-red-500 focus:outline-none p-2 rounded-lg w-48 shadow-sm transition"
+            className="border border-red-400 focus:ring-2 focus:ring-red-500 focus:outline-none p-2 rounded-lg w-full md:w-48 shadow-sm transition"
           />
 
           <select
             onChange={(e) => setSortOrder(e.target.value)}
-            className="border border-red-400 focus:ring-2 focus:ring-red-500 focus:outline-none p-2 rounded-lg shadow-sm transition cursor-pointer"
+            className="border border-red-400 focus:ring-2 focus:ring-red-500 focus:outline-none p-2 rounded-lg shadow-sm transition cursor-pointer w-full md:w-auto"
           >
             <option value="newest">Newest First</option>
             <option value="oldest">Oldest First</option>
