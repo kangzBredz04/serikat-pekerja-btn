@@ -64,12 +64,14 @@ export const deleteAccount = async (req, res) => {
 };
 
 export const addAccount = async (req, res) => {
-    const { full_name, username, email, password } = req.body;
+    const { full_name, username, password } = req.body;
     try {
+        console.log(req.body);
+
         const hashPassword = await argon2.hash(password);
         const result = await pool.query(
-            "INSERT INTO users (full_name, username, email, password) VALUES ($1, $2, $3, $4) RETURNING *",
-            [full_name, username, email, hashPassword]
+            "INSERT INTO users (full_name, username, password) VALUES ($1, $2, $3) RETURNING *",
+            [full_name, username, hashPassword]
         );
         res.status(201).json({
             msg: "Pendaftaran akun melalui admin telah berhasil",
