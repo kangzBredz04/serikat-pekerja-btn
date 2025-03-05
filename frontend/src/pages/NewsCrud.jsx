@@ -111,7 +111,7 @@ export default function NewsCrud() {
                     />
                   </td>
                   <td className="p-3 border-r border-red-200">
-                    {item.content.length > 100
+                    {item.content?.length > 100
                       ? item.content.substring(0, 100) + "..."
                       : item.content}
                   </td>
@@ -131,7 +131,10 @@ export default function NewsCrud() {
                         ) {
                           api
                             .delete(`/new/delete-by-id/${item.id}`)
-                            .then(async (res) => alert(res.message))
+                            .then(async (res) => {
+                              alert(res.msg);
+                              window.location.href = "/admin-news";
+                            })
                             .catch((e) => console.log(e));
                         }
                       }}
