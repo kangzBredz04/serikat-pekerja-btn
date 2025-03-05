@@ -88,6 +88,7 @@ function GalleryCrud() {
         window.location.reload(); // Refresh halaman setelah upload/update berhasil
       } else {
         alert(result.message);
+        console.log(formData);
       }
     } catch (error) {
       console.error(error);
@@ -112,29 +113,6 @@ function GalleryCrud() {
   const handleViewImage = (image) => {
     setCurrentImage(image);
     setShowModal(true);
-  };
-
-  const handleDelete = async (id) => {
-    // Tampilkan konfirmasi
-    const isConfirmed = confirm("Apakah anda akan menghapus gambar ini?");
-    if (!isConfirmed) return; // Jika pengguna membatalkan, hentikan proses
-
-    try {
-      // Kirim request DELETE ke backend
-      const response = api.delete(`/gallery/delete-image/${id}`);
-
-      const result = await response.json();
-
-      if (result.success) {
-        alert("Gambar berhasil dihapus!");
-        window.location.reload(); // Refresh halaman setelah penghapusan berhasil
-      } else {
-        alert(result.message);
-      }
-    } catch (error) {
-      console.error(error);
-      alert("Gagal menghapus gambar!");
-    }
   };
 
   const paginatedImages = filteredImages.slice(
@@ -242,7 +220,23 @@ function GalleryCrud() {
                       Edit
                     </button>
                     <button
-                      onClick={() => handleDelete(image.id)}
+                      onClick={() => {
+                        if (
+                          confirm(
+                            `Apakah anda yakin ingin menghapus gambar ${image.description}`
+                          )
+                        ) {
+                          api
+                            .delete(`/gallery/delete-image/${image.id}`)
+                            .then(async (res) => {
+                              alert(res.message);
+                              window.location.href = "/admin-gallery";
+                            })
+                            .catch((e) => {
+                              console.log(e);
+                            });
+                        }
+                      }}
                       className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                     >
                       Delete
